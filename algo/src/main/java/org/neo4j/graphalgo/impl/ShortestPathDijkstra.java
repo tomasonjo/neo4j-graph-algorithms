@@ -1,10 +1,6 @@
 package org.neo4j.graphalgo.impl;
 
-import com.carrotsearch.hppc.IntArrayDeque;
-import com.carrotsearch.hppc.IntDoubleMap;
-import com.carrotsearch.hppc.IntDoubleScatterMap;
-import com.carrotsearch.hppc.IntIntMap;
-import com.carrotsearch.hppc.IntIntScatterMap;
+import com.carrotsearch.hppc.*;
 import org.neo4j.graphalgo.api.*;
 import org.neo4j.graphalgo.core.utils.queue.IntPriorityQueue;
 import org.neo4j.graphalgo.core.utils.queue.SharedIntMinPriorityQueue;
@@ -18,7 +14,7 @@ public class ShortestPathDijkstra {
     private final IntDoubleMap costs;
     private final IntPriorityQueue queue;
     private final IntIntMap path;
-    private final IntArrayDeque finalPath;
+    private final LongArrayDeque finalPath;
     private final SimpleBitSet visited;
 
     public ShortestPathDijkstra(Graph graph) {
@@ -30,11 +26,11 @@ public class ShortestPathDijkstra {
                 costs,
                 Double.MAX_VALUE);
         path = new IntIntScatterMap(nodeCount);
-        finalPath = new IntArrayDeque();
+        finalPath = new LongArrayDeque();
         visited = new SimpleBitSet(nodeCount);
     }
 
-    public int[] compute(long startNode, long goalNode) {
+    public long[] compute(long startNode, long goalNode) {
         visited.clear();
         queue.clear();
 
@@ -47,7 +43,7 @@ public class ShortestPathDijkstra {
         finalPath.clear();
         int last = goal;
         while (last != -1) {
-            finalPath.addFirst(last);
+            finalPath.addFirst(graph.toOriginalNodeId(last));
             last = path.getOrDefault(last, -1);
         }
 
