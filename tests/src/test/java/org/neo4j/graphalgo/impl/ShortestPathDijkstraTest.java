@@ -128,8 +128,10 @@ public final class ShortestPathDijkstraTest {
 
         final long[] path = new ShortestPathDijkstra(graph).compute(
                 expected[0],
-                expected[expected.length - 1]
-        );
+                expected[expected.length - 1])
+                .resultStream()
+                .mapToLong(result -> result.nodeId)
+                .toArray();
 
         assertArrayEquals(
                 expected,
@@ -159,8 +161,10 @@ public final class ShortestPathDijkstraTest {
 
         final long[] path = new ShortestPathDijkstra(graph).compute(
                 expected[0],
-                expected[expected.length - 1]
-        );
+                expected[expected.length - 1])
+                .resultStream()
+                .mapToLong(result -> result.nodeId)
+                .toArray();
 
         assertArrayEquals(
                 expected,

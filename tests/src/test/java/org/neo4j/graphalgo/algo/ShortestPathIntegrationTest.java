@@ -14,7 +14,16 @@ import org.neo4j.kernel.impl.proc.Procedures;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.test.TestGraphDatabaseFactory;
 
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
+
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author mknblch
@@ -27,33 +36,21 @@ public class ShortestPathIntegrationTest {
     public static void setup() throws KernelException {
         String createGraph =
                 "CREATE (nA:Node{type:'start'})\n" + // start
-                "CREATE (nB1:Node)\n" +
-                "CREATE (nC1:Node)\n" +
-                "CREATE (nD1:Node)\n" +
-                "CREATE (nB2:Node)\n" +
-                "CREATE (nC2:Node)\n" +
-                "CREATE (nD2:Node)\n" +
-                "CREATE (nB3:Node)\n" +
-                "CREATE (nC3:Node)\n" +
-                "CREATE (nD3:Node)\n" +
+                "CREATE (nB:Node)\n" +
+                "CREATE (nC:Node)\n" +
+                "CREATE (nD:Node)\n" +
                 "CREATE (nX:Node{type:'end'})\n" + // end
                 "CREATE\n" +
 
                 // sum: 14.0
-                "  (nA)-[:TYPE {cost:2.0}]->(nB1),\n" +
-                "  (nB1)-[:TYPE {cost:3.0}]->(nC1),\n" +
-                "  (nC1)-[:TYPE {cost:4.0}]->(nD1),\n" +
-                "  (nD1)-[:TYPE {cost:5.0}]->(nX),\n" +
+                "  (nA)-[:TYPE {cost:5.0}]->(nX),\n" +
                 // sum: 8.0
-                "  (nA)-[:TYPE {cost:2.0}]->(nB2),\n" +
-                "  (nB2)-[:TYPE {cost:2.0}]->(nC2),\n" +
-                "  (nC2)-[:TYPE {cost:2.0}]->(nD2),\n" +
-                "  (nD2)-[:TYPE {cost:2.0}]->(nX),\n" +
+                "  (nA)-[:TYPE {cost:2.0}]->(nB),\n" +
+                "  (nB)-[:TYPE {cost:2.0}]->(nX),\n" +
                 // sum: 4.0
-                "  (nA)-[:TYPE {cost:1.0}]->(nB3),\n" +
-                "  (nB3)-[:TYPE {cost:1.0}]->(nC3),\n" +
-                "  (nC3)-[:TYPE {cost:1.0}]->(nD3),\n" +
-                "  (nD3)-[:TYPE {cost:1.0}]->(nX)";
+                "  (nA)-[:TYPE {cost:1.0}]->(nC),\n" +
+                "  (nC)-[:TYPE {cost:1.0}]->(nD),\n" +
+                "  (nD)-[:TYPE {cost:1.0}]->(nX)";
 
 
         db = (GraphDatabaseAPI)
@@ -72,15 +69,25 @@ public class ShortestPathIntegrationTest {
 
     @Test
     public void testDijkstra() throws Exception {
+        PathConsumer consumer = mock(PathConsumer.class);
         db.execute(
                 "MATCH (start:Node{type:'start'}), (end:Node{type:'end'}) " +
-                        "CALL algo.dijkstra(start, end, {property:'cost'}) YIELD nodeId " +
-                        "RETURN nodeId")
+                        "CALL algo.dijkstra(start, end, {property:'cost'}) YIELD nodeId, cost " +
+                        "RETURN nodeId, cost")
                 .accept((Result.ResultVisitor<Exception>) row -> {
-                    System.out.println(row.getNumber("nodeId"));
-                    return false;
+                    consumer.accept((Long) row.getNumber("nodeId"), (Double) row.getNumber("cost"));
+                    System.out.println(row.getNumber("cost"));
+                    return true;
                 });
+        verify(consumer, times(4)).accept(anyLong(), anyDouble());
+        verify(consumer, times(1)).accept(anyLong(), eq(0.0));
+        verify(consumer, times(1)).accept(anyLong(), eq(1.0));
+        verify(consumer, times(1)).accept(anyLong(), eq(2.0));
+        verify(consumer, times(1)).accept(anyLong(), eq(3.0));
     }
 
+    private interface PathConsumer {
+        void accept(long nodeId, double cost);
+    }
 
 }

@@ -14,8 +14,6 @@ import org.neo4j.procedure.Name;
 import org.neo4j.procedure.Procedure;
 
 import java.util.Map;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 /**
@@ -38,7 +36,7 @@ public class DijkstraProc {
     @Description("CALL algo.dijkstra(startNodeId:long, endNodeId:long, " +
             "{label:'labelName*', relationship:'relationshipName*', property:'propertyName*', defaultValue:1.0}) " +
             "YIELD nodeId - yields a stream of nodeId from start to end (inclusive)")
-    public Stream<ShortestPathNode> dijkstraShortestPath(
+    public Stream<ShortestPathDijkstra.Result> dijkstraShortestPath(
             @Name("startNode") Node startNodeId,
             @Name("endNode") Node endNodeId,
             @Name(value = "config", defaultValue = "{}")
@@ -53,27 +51,8 @@ public class DijkstraProc {
                 .withExecutorService(Pools.DEFAULT)
                 .load(HeavyGraphFactory.class);
 
-        final long[] path = new ShortestPathDijkstra(graph).compute(
-                startNodeId.getId(),
-                endNodeId.getId());
-
-        LongStream.of(path).mapToObj(ShortestPathNode::new).forEach(System.out::println);
-
-        return LongStream.of(path).mapToObj(ShortestPathNode::new);
-    }
-
-    public static class ShortestPathNode {
-        public final Long nodeId;
-
-        public ShortestPathNode(Long nodeId) {
-            this.nodeId = nodeId;
-        }
-
-        @Override
-        public String toString() {
-            return "ShortestPathNode{" +
-                    "nodeId=" + nodeId +
-                    '}';
-        }
+        return new ShortestPathDijkstra(graph)
+                .compute(startNodeId.getId(), endNodeId.getId())
+                .resultStream();
     }
 }

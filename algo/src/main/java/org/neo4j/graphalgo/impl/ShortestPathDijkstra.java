@@ -7,6 +7,9 @@ import org.neo4j.graphalgo.core.utils.queue.SharedIntMinPriorityQueue;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.kernel.impl.util.collection.SimpleBitSet;
 
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
 public class ShortestPathDijkstra {
 
     private final Graph graph;
@@ -14,8 +17,11 @@ public class ShortestPathDijkstra {
     private final IntDoubleMap costs;
     private final IntPriorityQueue queue;
     private final IntIntMap path;
-    private final LongArrayDeque finalPath;
     private final SimpleBitSet visited;
+
+    private double totalCost = 0.0;
+
+    private int goal;
 
     public ShortestPathDijkstra(Graph graph) {
         this.graph = graph;
@@ -26,28 +32,36 @@ public class ShortestPathDijkstra {
                 costs,
                 Double.MAX_VALUE);
         path = new IntIntScatterMap(nodeCount);
-        finalPath = new LongArrayDeque();
         visited = new SimpleBitSet(nodeCount);
     }
 
-    public long[] compute(long startNode, long goalNode) {
+    public ShortestPathDijkstra compute(long startNode, long goalNode) {
         visited.clear();
         queue.clear();
-
         int node = graph.toMappedNodeId(startNode);
-        int goal = graph.toMappedNodeId(goalNode);
+        goal = graph.toMappedNodeId(goalNode);
         costs.put(node, 0);
         queue.add(node, 0);
         run(goal);
+        return this;
+    }
 
-        finalPath.clear();
+    public Stream<Result> resultStream() {
+
+        final IntArrayDeque finalPath = new IntArrayDeque();
         int last = goal;
         while (last != -1) {
-            finalPath.addFirst(graph.toOriginalNodeId(last));
+            finalPath.addFirst(last);
             last = path.getOrDefault(last, -1);
+            totalCost += costs.getOrDefault(last, 0.0);
         }
 
-        return finalPath.toArray();
+        return StreamSupport.stream(finalPath.spliterator(), false)
+                .map(cursor -> new Result(graph.toOriginalNodeId(cursor.value), costs.get(cursor.value)));
+    }
+
+    public double getTotalCost() {
+        return totalCost;
     }
 
     private void run(int goal) {
@@ -80,4 +94,16 @@ public class ShortestPathDijkstra {
         }
     }
 
+
+    public static class Result {
+
+        public final Long nodeId;
+
+        public final Double cost;
+
+        public Result(Long nodeId, Double cost) {
+            this.nodeId = nodeId;
+            this.cost = cost;
+        }
+    }
 }
