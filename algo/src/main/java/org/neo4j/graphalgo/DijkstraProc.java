@@ -62,7 +62,7 @@ public class DijkstraProc {
     @Procedure("algo.dijkstra")
     @Description("CALL algo.dijkstra(startNodeId:long, endNodeId:long, propertyName:String" +
             "{label:'labelName', relationship:'relationshipName', defaultValue:1.0}) " +
-            "YIELD nodeId, cost - yields loadDuration, evalDuration, nodeCount, totalCost")
+            "YIELD nodeId, cost, loadDuration, evalDuration - yields nodeCount, totalCost, loadDuration, evalDuration")
     public Stream<DijkstraResult> dijkstra(
             @Name("startNode") Node startNode,
             @Name("endNode") Node endNode,
