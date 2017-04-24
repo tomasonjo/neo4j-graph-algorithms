@@ -42,12 +42,12 @@ public class ShortestPathIntegrationTest {
                 "CREATE (nX:Node{type:'end'})\n" + // end
                 "CREATE\n" +
 
-                // sum: 14.0
+                // sum: 5.0
                 "  (nA)-[:TYPE {cost:5.0}]->(nX),\n" +
-                // sum: 8.0
+                // sum: 4.0
                 "  (nA)-[:TYPE {cost:2.0}]->(nB),\n" +
                 "  (nB)-[:TYPE {cost:2.0}]->(nX),\n" +
-                // sum: 4.0
+                // sum: 3.0
                 "  (nA)-[:TYPE {cost:1.0}]->(nC),\n" +
                 "  (nC)-[:TYPE {cost:1.0}]->(nD),\n" +
                 "  (nD)-[:TYPE {cost:1.0}]->(nX)";
@@ -68,15 +68,14 @@ public class ShortestPathIntegrationTest {
     }
 
     @Test
-    public void testDijkstra() throws Exception {
+    public void testDijkstraStream() throws Exception {
         PathConsumer consumer = mock(PathConsumer.class);
         db.execute(
                 "MATCH (start:Node{type:'start'}), (end:Node{type:'end'}) " +
-                        "CALL algo.dijkstra(start, end, {property:'cost'}) YIELD nodeId, cost " +
+                        "CALL algo.dijkstraStream(start, end, 'cost') YIELD nodeId, cost\n" +
                         "RETURN nodeId, cost")
                 .accept((Result.ResultVisitor<Exception>) row -> {
                     consumer.accept((Long) row.getNumber("nodeId"), (Double) row.getNumber("cost"));
-                    System.out.println(row.getNumber("cost"));
                     return true;
                 });
         verify(consumer, times(4)).accept(anyLong(), anyDouble());
@@ -84,6 +83,22 @@ public class ShortestPathIntegrationTest {
         verify(consumer, times(1)).accept(anyLong(), eq(1.0));
         verify(consumer, times(1)).accept(anyLong(), eq(2.0));
         verify(consumer, times(1)).accept(anyLong(), eq(3.0));
+    }
+
+
+    @Test
+    public void testDijkstra() throws Exception {
+        db.execute(
+                "MATCH (start:Node{type:'start'}), (end:Node{type:'end'}) " +
+                        "CALL algo.dijkstra(start, end, 'cost') YIELD loadDuration, evalDuration, nodeCount, totalCost\n" +
+                        "RETURN loadDuration, evalDuration, nodeCount, totalCost")
+                .accept((Result.ResultVisitor<Exception>) row -> {
+                    assertEquals(3.0, (Double) row.getNumber("totalCost"), 10E2);
+                    assertEquals(4L, row.getNumber("nodeCount"));
+                    assertNotEquals(-1L, row.getNumber("loadDuration"));
+                    assertNotEquals(-1L, row.getNumber("evalDuration"));
+                    return false;
+                });
     }
 
     private interface PathConsumer {

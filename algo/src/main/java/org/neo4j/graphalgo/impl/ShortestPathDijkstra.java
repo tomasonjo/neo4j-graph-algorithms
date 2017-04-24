@@ -17,6 +17,7 @@ public class ShortestPathDijkstra {
     private final IntDoubleMap costs;
     private final IntPriorityQueue queue;
     private final IntIntMap path;
+    private final IntArrayDeque finalPath;
     private final SimpleBitSet visited;
 
     private double totalCost = 0.0;
@@ -33,6 +34,7 @@ public class ShortestPathDijkstra {
                 Double.MAX_VALUE);
         path = new IntIntScatterMap(nodeCount);
         visited = new SimpleBitSet(nodeCount);
+        finalPath = new IntArrayDeque();
     }
 
     public ShortestPathDijkstra compute(long startNode, long goalNode) {
@@ -43,25 +45,27 @@ public class ShortestPathDijkstra {
         costs.put(node, 0);
         queue.add(node, 0);
         run(goal);
-        return this;
-    }
-
-    public Stream<Result> resultStream() {
-
-        final IntArrayDeque finalPath = new IntArrayDeque();
         int last = goal;
+        finalPath.clear();
         while (last != -1) {
             finalPath.addFirst(last);
             last = path.getOrDefault(last, -1);
             totalCost += costs.getOrDefault(last, 0.0);
         }
+        return this;
+    }
 
+    public Stream<Result> resultStream() {
         return StreamSupport.stream(finalPath.spliterator(), false)
                 .map(cursor -> new Result(graph.toOriginalNodeId(cursor.value), costs.get(cursor.value)));
     }
 
     public double getTotalCost() {
         return totalCost;
+    }
+
+    public int getPathLength() {
+        return finalPath.size();
     }
 
     private void run(int goal) {
@@ -98,7 +102,6 @@ public class ShortestPathDijkstra {
     public static class Result {
 
         public final Long nodeId;
-
         public final Double cost;
 
         public Result(Long nodeId, Double cost) {
