@@ -5,6 +5,7 @@ import org.neo4j.graphalgo.api.*;
 import org.neo4j.graphalgo.core.sources.BothRelationshipAdapter;
 import org.neo4j.graphalgo.core.utils.RawValues;
 import org.neo4j.graphalgo.core.utils.container.SubGraph;
+import org.neo4j.graphalgo.core.utils.container.UndirectedTree;
 import org.neo4j.graphalgo.core.utils.queue.LongMinPriorityQueue;
 import org.neo4j.graphdb.Direction;
 
@@ -33,10 +34,10 @@ public class MSTPrim {
      * @param startNode the node to start the evaluation from
      * @return a container of the transitions in the minimum spanning tree
      */
-    public SubGraph compute(int startNode) {
+    public UndirectedTree compute(int startNode) {
 
         final LongMinPriorityQueue queue = new LongMinPriorityQueue();
-        final SubGraph mst = new SubGraph(64);
+        final UndirectedTree mst = new UndirectedTree(idMapping.nodeCount());
         final BitSet visited = new BitSet(idMapping.nodeCount());
 
         // initially add all relations from startNode to the priority queue
@@ -54,7 +55,7 @@ public class MSTPrim {
             }
             visited.set(nodeId);
             // add to mst
-            mst.add(transition);
+            mst.addRelationship(getHead(transition), nodeId);
             // add new candidates
             iterator.forEachRelationship(nodeId, (sourceNodeId, targetNodeId, relationId) -> {
                 queue.add(combineIntInt(nodeId, targetNodeId), weights.weightOf(sourceNodeId, targetNodeId));
