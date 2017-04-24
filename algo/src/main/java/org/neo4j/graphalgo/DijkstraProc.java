@@ -25,7 +25,6 @@ public class DijkstraProc {
 
     public static final String CONFIG_LABEL = "label";
     public static final String CONFIG_RELATIONSHIP = "relationship";
-    public static final String CONFIG_PROPERTY = "property";
     public static final String CONFIG_DEFAULT_VALUE = "defaultValue";
 
     @Context
