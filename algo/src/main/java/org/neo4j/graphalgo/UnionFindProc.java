@@ -35,7 +35,7 @@ public class UnionFindProc {
     @Procedure(value = "algo.unionFind", mode = Mode.WRITE)
     @Description("CALL algo.unionFind(label:String, relationship:String, " +
             "{property:'propertyName', threshold:0.42, defaultValue:1.0, write: true, clusterProperty:'cluster'}) " +
-            "YIELD setCount, loadDuration, evalDuration, writeDuration")
+            "YIELD nodeCount, setCount, loadDuration, evalDuration, writeDuration")
     public Stream<UnionFindResult> unionFind(
             @Name(value = "label", defaultValue = "") String label,
             @Name(value = "relationship", defaultValue = "") String relationship,
@@ -87,7 +87,7 @@ public class UnionFindProc {
         return new GraphLoader(api)
                 .withOptionalLabel(label)
                 .withOptionalRelationshipType(relationship)
-                .withOptionalWeightsFromProperty(
+                .withOptionalRelationshipWeightsFromProperty(
                         (String) config.get(CONFIG_PROPERTY),
                         (double)config.getOrDefault(CONFIG_DEFAULT_VALUE, 1.0))
                 .withExecutorService(Pools.DEFAULT)
