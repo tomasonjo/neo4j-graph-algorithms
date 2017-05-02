@@ -54,6 +54,7 @@ public final class UndirectedTree {
 
     /**
      * Creates a new Tree that can hold up to {@code capacity} nodes.
+     * {@link UndirectedTree#reset()} must be called prior use
      */
     public UndirectedTree(int capacity) {
         try {
@@ -65,9 +66,12 @@ public final class UndirectedTree {
             iae.addSuppressed(e);
             throw iae;
         }
+        this.capacity = capacity;
+    }
+
+    public void reset() {
         Arrays.fill(children, INVALID_NODE);
         Arrays.fill(siblings, INVALID_NODE);
-        this.capacity = capacity;
     }
 
     /**

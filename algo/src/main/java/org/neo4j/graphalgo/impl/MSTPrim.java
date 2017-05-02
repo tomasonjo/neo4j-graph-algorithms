@@ -18,11 +18,13 @@ public class MSTPrim {
     private final IdMapping idMapping;
     private final BothRelationshipIterator iterator;
     private final RelationshipWeights weights;
+    private final UndirectedTree minimumSpanningTree;
 
     public MSTPrim(IdMapping idMapping, BothRelationshipIterator iterator, RelationshipWeights weights) {
         this.idMapping = idMapping;
         this.iterator = iterator;
         this.weights = weights;
+        minimumSpanningTree = new UndirectedTree(idMapping.nodeCount());
     }
 
     /**
@@ -31,12 +33,10 @@ public class MSTPrim {
      * @param startNode the node to start the evaluation from
      * @return a container of the transitions in the minimum spanning tree
      */
-    public UndirectedTree compute(int startNode) {
-
+    public MSTPrim compute(int startNode) {
         final LongMinPriorityQueue queue = new LongMinPriorityQueue();
-        final UndirectedTree mst = new UndirectedTree(idMapping.nodeCount());
         final BitSet visited = new BitSet(idMapping.nodeCount());
-
+        minimumSpanningTree.reset();
         // initially add all relations from startNode to the priority queue
         visited.set(startNode);
         iterator.forEachRelationship(startNode, (sourceNodeId, targetNodeId, relationId) -> {
@@ -52,14 +52,17 @@ public class MSTPrim {
             }
             visited.set(nodeId);
             // add to mst
-            mst.addRelationship(getHead(transition), nodeId);
+            minimumSpanningTree.addRelationship(getHead(transition), nodeId);
             // add new candidates
             iterator.forEachRelationship(nodeId, (sourceNodeId, targetNodeId, relationId) -> {
                 queue.add(combineIntInt(nodeId, targetNodeId), weights.weightOf(sourceNodeId, targetNodeId));
                 return true;
             });
         }
+        return this;
+    }
 
-        return mst;
+    public UndirectedTree getMinimumSpanningTree() {
+        return minimumSpanningTree;
     }
 }

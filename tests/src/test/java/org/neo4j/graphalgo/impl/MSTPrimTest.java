@@ -14,6 +14,7 @@ import org.neo4j.graphalgo.core.sources.BufferedWeightMap;
 import org.neo4j.graphalgo.core.sources.LazyIdMapper;
 import org.neo4j.graphalgo.core.utils.container.RelationshipContainer;
 import org.neo4j.graphalgo.core.utils.container.SubGraph;
+import org.neo4j.graphalgo.core.utils.container.UndirectedTree;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
 
@@ -111,10 +112,9 @@ public class MSTPrimTest extends Neo4JTestCase {
         verifyMst(new MSTPrim(idMapper, bothRelationshipAdapter, weightMap).compute(d));
     }
 
-    private void verifyMst(SubGraph mst) {
+    private void verifyMst(UndirectedTree mst) {
         final AssertingConsumer consumer = new AssertingConsumer();
-        mst.forEachRelationship(consumer);
-        System.out.println(mst);
+        mst.forEachDFS(a, consumer);
         consumer.assertContains(a, b);
         consumer.assertContains(a, c);
         consumer.assertContains(b, d);

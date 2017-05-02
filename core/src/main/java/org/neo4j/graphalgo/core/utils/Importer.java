@@ -13,6 +13,9 @@ import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.storageengine.api.NodeItem;
 
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 /**
@@ -82,6 +85,10 @@ public abstract class Importer<T, ME extends Importer<T, ME>> {
         });
 
         return buildT();
+    }
+
+    public Future<T> delay(ExecutorService executorService) {
+        return executorService.submit(this::build);
     }
 
     /**
