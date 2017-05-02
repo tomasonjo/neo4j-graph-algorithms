@@ -5,7 +5,6 @@ import org.neo4j.graphalgo.core.sources.BufferedWeightMap;
 import org.neo4j.graphalgo.core.sources.LazyIdMapper;
 import org.neo4j.graphalgo.core.utils.ProgressTimer;
 import org.neo4j.graphalgo.core.utils.container.RelationshipContainer;
-import org.neo4j.graphalgo.core.utils.container.UndirectedTree;
 import org.neo4j.graphalgo.impl.MSTPrim;
 import org.neo4j.graphalgo.impl.MSTPrimExporter;
 import org.neo4j.graphalgo.results.MSTPrimResult;
@@ -14,6 +13,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.logging.Log;
 import org.neo4j.procedure.Context;
+import org.neo4j.procedure.Mode;
 import org.neo4j.procedure.Name;
 import org.neo4j.procedure.Procedure;
 
@@ -24,9 +24,6 @@ import java.util.stream.Stream;
  * @author mknblch
  */
 public class MSTPrimProc {
-
-    public static final String CONFIG_LABEL = "label";
-    public static final String CONFIG_RELATIONSHIP = "relationship";
 
     public static final String CONFIG_WRITE = "write";
     public static final String CONFIG_WRITE_RELATIONSHIP = "writeTo";
@@ -39,10 +36,12 @@ public class MSTPrimProc {
     @Context
     public Log log;
 
-    @Procedure("algo.mstprim.augment")
+    @Procedure(value = "algo.mstprim.augment", mode = Mode.WRITE)
     public Stream<MSTPrimResult> mstPrim(
             @Name("startNode") Node startNode,
-            @Name("property") String propertyName,
+            @Name(value = "property") String propertyName,
+            @Name(value = "label", defaultValue = "") String label,
+            @Name(value = "relationship", defaultValue = "") String relationship,
             @Name(value = "config", defaultValue = "{}") Map<String, Object> config) {
 
         LazyIdMapper idMapper = new LazyIdMapper();
@@ -53,17 +52,19 @@ public class MSTPrimProc {
         BufferedWeightMap weightMap = BufferedWeightMap.importer(api)
                 .withIdMapping(idMapper)
                 .withAnyDirection(true)
-                .withOptionalLabel((String) config.get(CONFIG_LABEL))
-                .withOptionalRelationshipType(CONFIG_RELATIONSHIP)
+                .withOptionalLabel(label)
+                .withOptionalRelationshipType(relationship)
                 .withWeightsFromProperty(propertyName, 1.0)
                 .build();
 
         RelationshipContainer relationshipContainer = RelationshipContainer.importer(api)
                 .withIdMapping(idMapper)
                 .withDirection(Direction.BOTH)
-                .withOptionalLabel((String) config.get(CONFIG_LABEL))
-                .withOptionalRelationshipType(CONFIG_RELATIONSHIP)
+                .withOptionalLabel(label)
+                .withOptionalRelationshipType(relationship)
                 .build();
+
+        timer.stop();
 
         int startNodeId = idMapper.toMappedNodeId(startNode.getId());
 
@@ -78,7 +79,7 @@ public class MSTPrimProc {
             timer = ProgressTimer.start(builder::withWriteDuration);
             new MSTPrimExporter(api)
                     .withIdMapping(idMapper)
-                    .withRelationship((String) config.getOrDefault(CONFIG_WRITE_RELATIONSHIP, CONFIG_WRITE_RELATIONSHIP_DEFAULT))
+                    .withWriteRelationship((String) config.getOrDefault(CONFIG_WRITE_RELATIONSHIP, CONFIG_WRITE_RELATIONSHIP_DEFAULT))
                     .write(mstPrim.getMinimumSpanningTree());
             timer.stop();
         }

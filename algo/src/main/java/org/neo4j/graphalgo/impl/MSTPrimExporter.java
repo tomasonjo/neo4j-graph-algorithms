@@ -20,7 +20,7 @@ public class MSTPrimExporter extends Exporter<MSTPrim.MinimumSpanningTree> {
         super(api);
     }
 
-    public MSTPrimExporter withRelationship(String relationship) {
+    public MSTPrimExporter withWriteRelationship(String relationship) {
         type = RelationshipType.withName(relationship);
         return this;
     }
