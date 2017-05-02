@@ -89,30 +89,30 @@ public class MSTPrimTest extends Neo4JTestCase {
 
     @Test
     public void testMstFromA() throws Exception {
-        verifyMst(new MSTPrim(idMapper, bothRelationshipAdapter, weightMap).compute(a));
+        verifyMst(new MSTPrim(idMapper, bothRelationshipAdapter, weightMap).compute(a).getMinimumSpanningTree());
     }
 
     @Test
     public void testMstFromB() throws Exception {
-        verifyMst(new MSTPrim(idMapper, bothRelationshipAdapter, weightMap).compute(b));
+        verifyMst(new MSTPrim(idMapper, bothRelationshipAdapter, weightMap).compute(b).getMinimumSpanningTree());
     }
 
     @Test
     public void testMstFromC() throws Exception {
-        verifyMst(new MSTPrim(idMapper, bothRelationshipAdapter, weightMap).compute(c));
+        verifyMst(new MSTPrim(idMapper, bothRelationshipAdapter, weightMap).compute(c).getMinimumSpanningTree());
     }
 
     @Test
     public void testMstFromD() throws Exception {
-        verifyMst(new MSTPrim(idMapper, bothRelationshipAdapter, weightMap).compute(d));
+        verifyMst(new MSTPrim(idMapper, bothRelationshipAdapter, weightMap).compute(d).getMinimumSpanningTree());
     }
 
     @Test
     public void testMstFromE() throws Exception {
-        verifyMst(new MSTPrim(idMapper, bothRelationshipAdapter, weightMap).compute(d));
+        verifyMst(new MSTPrim(idMapper, bothRelationshipAdapter, weightMap).compute(d).getMinimumSpanningTree());
     }
 
-    private void verifyMst(UndirectedTree mst) {
+    private void verifyMst(MSTPrim.MinimumSpanningTree mst) {
         final AssertingConsumer consumer = new AssertingConsumer();
         mst.forEachDFS(a, consumer);
         consumer.assertContains(a, b);

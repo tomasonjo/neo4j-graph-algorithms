@@ -43,7 +43,7 @@ import java.util.Arrays;
  * Iteration is roughly in reverse insertion order, but this is an implementation
  * detail and not guaranteed.
  */
-public final class UndirectedTree {
+public class UndirectedTree {
 
     private static final int INVALID_NODE = -1;
     private static final long RELATION_ID_NOT_SUPPORTED = -1L;
@@ -54,7 +54,6 @@ public final class UndirectedTree {
 
     /**
      * Creates a new Tree that can hold up to {@code capacity} nodes.
-     * {@link UndirectedTree#reset()} must be called prior use
      */
     public UndirectedTree(int capacity) {
         try {
@@ -66,12 +65,9 @@ public final class UndirectedTree {
             iae.addSuppressed(e);
             throw iae;
         }
-        this.capacity = capacity;
-    }
-
-    public void reset() {
         Arrays.fill(children, INVALID_NODE);
         Arrays.fill(siblings, INVALID_NODE);
+        this.capacity = capacity;
     }
 
     /**
