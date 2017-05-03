@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.neo4j.graphalgo.BetweennessCentralityProc;
-import org.neo4j.graphalgo.PageRankProc;
 import org.neo4j.graphalgo.api.Graph;
 import org.neo4j.graphalgo.core.GraphLoader;
 import org.neo4j.graphalgo.core.graphbuilder.DefaultBuilder;
@@ -71,12 +70,12 @@ public class BetweennessCentralityIntegrationTest {
 
         builder.newRingBuilder()
                 .createRing(5)
-                .forEachInTx(node -> {
+                .forEachNodeInTx(node -> {
                     node.createRelationshipTo(center, type);
                 })
                 .newRingBuilder()
                 .createRing(5)
-                .forEachInTx(node -> {
+                .forEachNodeInTx(node -> {
                     center.createRelationshipTo(node, type);
                 });
 

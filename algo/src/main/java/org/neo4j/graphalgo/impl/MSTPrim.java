@@ -2,7 +2,6 @@ package org.neo4j.graphalgo.impl;
 
 import com.carrotsearch.hppc.*;
 import org.neo4j.graphalgo.api.*;
-import org.neo4j.graphalgo.core.utils.container.SubGraph;
 import org.neo4j.graphalgo.core.utils.container.UndirectedTree;
 import org.neo4j.graphalgo.core.utils.queue.LongMinPriorityQueue;
 
@@ -35,7 +34,7 @@ public class MSTPrim {
     public MSTPrim compute(int startNode) {
         final LongMinPriorityQueue queue = new LongMinPriorityQueue();
         final BitSet visited = new BitSet(idMapping.nodeCount());
-        minimumSpanningTree = new MinimumSpanningTree(idMapping.nodeCount(), startNode);
+        minimumSpanningTree = new MinimumSpanningTree(idMapping.nodeCount(), startNode, weights);
         // initially add all relations from startNode to the priority queue
         visited.set(startNode);
         iterator.forEachRelationship(startNode, (sourceNodeId, targetNodeId, relationId) -> {
@@ -68,15 +67,18 @@ public class MSTPrim {
     public static class MinimumSpanningTree extends UndirectedTree {
 
         private final int startNodeId;
+        private final RelationshipWeights weights;
 
         /**
          * Creates a new Tree that can hold up to {@code capacity} nodes.
          *
          * @param capacity
+         * @param weights
          */
-        public MinimumSpanningTree(int capacity, int startNodeId) {
+        public MinimumSpanningTree(int capacity, int startNodeId, RelationshipWeights weights) {
             super(capacity);
             this.startNodeId = startNodeId;
+            this.weights = weights;
         }
 
         public int getStartNodeId() {
@@ -89,6 +91,56 @@ public class MSTPrim {
 
         public void forEachDFS(RelationshipConsumer consumer) {
             super.forEachDFS(startNodeId, consumer);
+        }
+
+        public Aggregator aggregate() {
+            final Aggregator aggregator = new Aggregator(weights);
+            forEachBFS(aggregator);
+            return aggregator;
+        }
+
+        public static class Aggregator implements RelationshipConsumer {
+
+            private final RelationshipWeights relationshipWeights;
+            private double sum = 0.0;
+            private double min = Double.MAX_VALUE;
+            private double max = Double.MIN_VALUE;
+            private int count;
+
+
+            private Aggregator(RelationshipWeights relationshipWeights) {
+                this.relationshipWeights = relationshipWeights;
+            }
+
+            @Override
+            public boolean accept(int sourceNodeId, int targetNodeId, long relationId) {
+                double weight = relationshipWeights.weightOf(sourceNodeId, targetNodeId);
+                if (weight < min) {
+                    min = weight;
+                }
+                if (weight > max) {
+                    max = weight;
+                }
+                count++;
+                sum += weight;
+                return true;
+            }
+
+            public double getSum() {
+                return sum;
+            }
+
+            public double getMin() {
+                return min;
+            }
+
+            public double getMax() {
+                return max;
+            }
+
+            public int getCount() {
+                return count;
+            }
         }
     }
 }
