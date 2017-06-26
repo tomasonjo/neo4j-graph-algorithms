@@ -1,4 +1,4 @@
-= Clustering: Louvain
+= Community Detection: Louvain
 
 _Louvain_ is an algorithm for detecting communities in networks that relies upon a heuristic for maximizing the modularity. 
 
