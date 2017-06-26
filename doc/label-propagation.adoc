@@ -1,4 +1,4 @@
-= Clustering: Label Propagation
+= Community Detection: Label Propagation
 
 _Label Propagation_ algorithm (LPA) is an extremely fast community detection method and is widely used in large scale networks. Community detection and analysis is an important methodology for understanding the organization of various real-world networks and has applications in problems as diverse as consensus formation in social communities or the identification of functional modules in biochemical networks. 
 
@@ -69,7 +69,7 @@ partitionProperty - simple label propagation kernel
 :leveloffset: +1
 // copied from: https://github.com/neo4j-contrib/neo4j-graph-algorithms/issues/95
 
-_Label Propagation_ is a clustering algorithm already implemented in current apoc-procedures. 
+_Label Propagation_ is a community detection algorithm already implemented in current apoc-procedures. 
 
 ## Progress
 

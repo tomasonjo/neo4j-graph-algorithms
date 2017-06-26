@@ -26,8 +26,8 @@ import java.util.stream.StreamSupport;
  */
 public class StronglyConnectedComponentsProc {
 
-    public static final String CONFIG_WRITE_PROPERTY = "clusterProperty";
-    public static final String CONFIG_CLUSTER = "cluster";
+    public static final String CONFIG_WRITE_PROPERTY = "communityProperty";
+    public static final String CONFIG_CLUSTER = "community";
 
     @Context
     public GraphDatabaseAPI api;

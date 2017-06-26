@@ -25,8 +25,8 @@ import java.util.stream.Stream;
 public class UnionFindProc2 {
 
     public static final String CONFIG_THRESHOLD = "threshold";
-    public static final String CONFIG_CLUSTER_PROPERTY = "clusterProperty";
-    public static final String DEFAULT_CLUSTER_PROPERTY = "cluster";
+    public static final String CONFIG_CLUSTER_PROPERTY = "communityProperty";
+    public static final String DEFAULT_CLUSTER_PROPERTY = "community";
 
     @Context
     public GraphDatabaseAPI api;
@@ -36,7 +36,7 @@ public class UnionFindProc2 {
 
     @Procedure(value = "algo.unionFind.exp1", mode = Mode.WRITE)
     @Description("CALL algo.unionFind(label:String, relationship:String, " +
-            "{property:'weight', threshold:0.42, defaultValue:1.0, write: true, clusterProperty:'cluster'}) " +
+            "{property:'weight', threshold:0.42, defaultValue:1.0, write: true, communityProperty:'community'}) " +
             "YIELD nodes, setCount, loadMillis, computeMillis, writeMillis")
     public Stream<UnionFindResult> unionFind(
             @Name(value = "label", defaultValue = "") String label,
