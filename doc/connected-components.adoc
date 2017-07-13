@@ -190,7 +190,7 @@ https://en.wikipedia.org/wiki/Connected_component_(graph_theory)
 :leveloffset: +1
 // copied from: https://github.com/neo4j-contrib/neo4j-graph-algorithms/issues/79
 
-_Connected Components_ or _UnionFind_ basically finds sets of connected nodes where each node is reachable from any other node in the same set. One implementation also evaluates a Predicate on each relation which allows graph partitioning of the graph based on Relationships and Properties.
+_Connected Components_ or _UnionFind_ basically finds sets of connected nodes where each node is reachable from any other node in the same set. One implementation also evaluates a Predicate on each relation which allows partitioning of the graph based on Relationships and Properties.
 
 ## Progress
 
