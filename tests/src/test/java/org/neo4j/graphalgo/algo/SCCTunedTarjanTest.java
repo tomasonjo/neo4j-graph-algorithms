@@ -155,7 +155,7 @@ public class SCCTunedTarjanTest {
 
         final IntIntScatterMap testMap = new IntIntScatterMap();
 
-        String cypher = "CALL algo.scc.tunedTarjan.stream() YIELD nodeId, cluster";
+        String cypher = "CALL algo.scc.tunedTarjan.stream() YIELD nodeId, partition";
 
         api.execute(cypher).accept(row -> {
             testMap.addTo(row.getNumber("partition").intValue(), 1);
