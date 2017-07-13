@@ -23,11 +23,9 @@ Subtle, difficult-to-detect bugs often result when your algorithm is run only on
 
 == Algorithm explanation on simple sample graph
 
-Recall that an undirected graph is connected if for every pair of vertices, there is a path in the graph
-between those vertices. 
-A connected component of an undirected graph is a maximal connected
-subgraph of the graph. 
-That means that the direction of the relationships  in our graph have no influence as we treat our graph as undirected. 
+Recall that an undirected graph is connected if for every pair of vertices, there is a path in the graph between those vertices. 
+A connected component of an undirected graph is a maximal connected subgraph of the graph. 
+That means that the direction of the relationships in our graph have no influence as we treat our graph as undirected. 
 We have two implementations of connected components algorithm. 
 First implementations treats the graph as unweighted and the second version is weighted, where you can define the threshold of the weight above which relationships are created. 
 
