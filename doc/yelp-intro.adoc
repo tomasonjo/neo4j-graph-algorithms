@@ -1,0 +1,80 @@
+== Yelp Challenge
+
+lala challenge blalab 10th iteration
+
+https://www.yelp.com/dataset/challenge
+
+https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases
+
+
+== Data
+
+156639 businesses
+
+1005693 tip
+
+4736897 reviews
+
+9489337 users
+
+35444850 friends edges
+
+https://www.yelp.com/dataset/documentation/json
+
+== Graph Model
+
+image::{img}/yelp_graph_model.png[]
+
+.Define graph schema (constraint/index)
+[source,cypher]
+----
+include::scripts/yelp-import.cypher[tag=load-schema]
+----
+
+
+== Import
+.Load businesses
+[source,cypher]
+----
+
+include::scripts/yelp-import.cypher[tag=load-business]
+
+----
+
+.Load tips
+[source,cypher]
+----
+
+include::scripts/yelp-import.cypher[tag=load-tip]
+
+----
+
+.Load reviews
+[source,cypher]
+----
+
+include::scripts/yelp-import.cypher[tag=load-review]
+
+----
+
+.Load users
+[source,cypher]
+----
+
+include::scripts/yelp-import.cypher[tag=load-user]
+
+----
+
+== Networks
+
+=== Social network of friends
+
+=== Projecting a review co-occurence graph
+
+.Create a co-occurence graph
+[source,cypher]
+----
+include::scripts/yelp-import.cypher[tag=cooccurence-graph]
+----
+=== Feature extraction and kNN 
+
