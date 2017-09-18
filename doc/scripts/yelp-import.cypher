@@ -62,13 +62,13 @@ MERGE (u)-[:FRIEND]-(u1)
 // tag::cooccurence-graph[]
 
 CALL apoc.periodic.iterate(
-"MATCH (p1:User)-->(r1:Review)-->(:Business)<--(r2:Review)<--(p2:User) 
- WHERE id(p1) < id(p2) AND r1.stars = r2.stars 
- RETURN p1,p2
- ","
- MERGE (p1)-[s:SIMILAR]-(p2) 
- ON CREATE SET s.weight = 1 
- ON MATCH SET s.weight = s.weight + 1
- ", {batchSize:20000, parallel:false,iterateList:true});
+"MATCH (p1:User) WHERE size((p1)-[:WROTE]->()) > 5 RETURN p1",
+"
+MATCH (p1)-[:WROTE]->(r1)-->()<--(r2)<-[:WROTE]-(p2)
+WHERE id(p1) < id(p2) AND size((p2)-[:WROTE]->()) > 10
+WITH p1,p2,count(*) as coop, collect(r1.stars) as s1, collect(r2.stars) as s2 where coop > 10
+WITH p1,p2, apoc.algo.cosineSimilarity(s1,s2) as cosineSimilarity WHERE cosineSimilarity > 0
+MERGE (p1)-[s:SIMILAR_5_10]-(p2) SET s.weight = cosineSimilarity"
+, {batchSize:100, parallel:false,iterateList:true});
 
 // end::cooccurence-graph[]
