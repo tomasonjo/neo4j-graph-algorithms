@@ -33,7 +33,7 @@ CALL apoc.periodic.iterate("
 CALL apoc.load.json('file:///dataset/review.json') 
 YIELD value RETURN value
 ","
-MATCH (b:Business{id:value.business_id})
+MERGE (b:Business{id:value.business_id})
 MERGE (u:User{id:value.user_id})
 MERGE (r:Review{id:value.review_id})
 MERGE (u)-[:WROTE]->(r)
