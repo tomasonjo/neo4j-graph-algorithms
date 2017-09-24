@@ -58,8 +58,19 @@ MERGE (u)-[:FRIEND]-(u1)
 ",{batchSize: 100, iterateList: true});
 // end::load-user[]
 
+// tag::social-network-local-props[]
 
-// tag::cooccurence-graph[]
+
+MATCH (u:User)
+RETURN avg(apoc.node.degree(u,'FRIEND')) as average_friends,
+       stdev(apoc.node.degree(u,'FRIEND')) as stdev_friends,
+       max(apoc.node.degree(u,'FRIEND')) as max_friends,
+       min(apoc.node.degree(u,'FRIEND')) as min_friends
+
+// end::social-network-local-props[]
+
+
+// tag::reviewsimilarity-graph[]
 
 CALL apoc.periodic.iterate(
 "MATCH (p1:User) WHERE size((p1)-[:WROTE]->()) > 5 RETURN p1",
@@ -68,7 +79,25 @@ MATCH (p1)-[:WROTE]->(r1)-->()<--(r2)<-[:WROTE]-(p2)
 WHERE id(p1) < id(p2) AND size((p2)-[:WROTE]->()) > 10
 WITH p1,p2,count(*) as coop, collect(r1.stars) as s1, collect(r2.stars) as s2 where coop > 10
 WITH p1,p2, apoc.algo.cosineSimilarity(s1,s2) as cosineSimilarity WHERE cosineSimilarity > 0
-MERGE (p1)-[s:SIMILAR_5_10]-(p2) SET s.weight = cosineSimilarity"
+MERGE (p1)-[s:SIMILAR_REVIEWS]-(p2) SET s.weight = cosineSimilarity"
 , {batchSize:100, parallel:false,iterateList:true});
 
-// end::cooccurence-graph[]
+// end::reviewsimilarity-graph[]
+
+
+// tag::coocurence-graph[]
+
+CALL apoc.periodic.iterate("
+MATCH (b1:Business) WHERE size((b1)<-[:REVIEWS]->()) > 10 RETURN b1
+","
+MATCH (b1)<--()<-[:WROTE]-(:User)-[:WROTE]->()-->(b2:Business)
+WHERE id(b1) < id(b2) AND size((b2)<-[:REVIEWS]-()) > 10
+WITH b1, b2, COUNT(*) AS weight
+MERGE (b1)-[cr:COOCURENT_REVIEWS]-(b2)
+SET cr.weight = weight
+",{batchSize: 100, iterateList: true});
+
+
+// end::coocurence-graph[]
+
+
