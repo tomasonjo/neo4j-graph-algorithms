@@ -38,7 +38,7 @@ MERGE (u:User{id:value.user_id})
 MERGE (r:Review{id:value.review_id})
 MERGE (u)-[:WROTE]->(r)
 MERGE (r)-[:REVIEWS]->(b)
-SET r += apoc.map.clean(value, ['business_id','user_id','review_id','text'],["0"]) 
+SET r += apoc.map.clean(value, ['business_id','user_id','review_id','text'],[0]) 
 ",{batchSize: 10000, iterateList: true});
 // end::load-review[]
 
@@ -50,7 +50,7 @@ CALL apoc.load.json('file:///dataset/user.json')
 YIELD value RETURN value
 ","
 MERGE (u:User{id:value.user_id})
-SET u += apoc.map.clean(value, ['friends','user_id'],[])
+SET u += apoc.map.clean(value, ['friends','user_id'],[0])
 WITH u,value.friends as friends
 UNWIND friends as friend
 MERGE (u1:User{id:friend})
@@ -92,7 +92,7 @@ MATCH (b1:Business) WHERE size((b1)<-[:REVIEWS]->()) > 10 RETURN b1
 ","
 MATCH (b1)<--()<-[:WROTE]-(:User)-[:WROTE]->()-->(b2:Business)
 WHERE id(b1) < id(b2) AND size((b2)<-[:REVIEWS]-()) > 10
-WITH b1, b2, COUNT(*) AS weight
+WITH b1, b2, COUNT(*) AS weight where weight > 5
 MERGE (b1)-[cr:COOCURENT_REVIEWS]-(b2)
 SET cr.weight = weight
 ",{batchSize: 100, iterateList: true});
