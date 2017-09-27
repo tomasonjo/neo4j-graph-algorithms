@@ -132,9 +132,9 @@ We support the following versions of the label propagation algorithms:
 
 == References
 
-* [0] http://cpb.iphy.ac.cn/fileup/PDF/2014-9-098902.pdf
+* http://cpb.iphy.ac.cn/fileup/PDF/2014-9-098902.pdf
 
-* [1] http://shodhganga.inflibnet.ac.in/bitstream/10603/36003/4/chapter3.pdf
+* http://shodhganga.inflibnet.ac.in/bitstream/10603/36003/4/chapter3.pdf
 
 ifdef::implementation[]
 // tag::implementation[]
