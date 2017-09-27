@@ -2,6 +2,10 @@
 
 _Louvain_ is an algorithm for detecting graph partitions in networks that relies upon a heuristic for maximizing the modularity. 
 
+https://arxiv.org/pdf/0803.0476.pdf
+
+https://www.quora.com/Is-there-a-simple-explanation-of-the-Louvain-Method-of-community-detection
+
 == History, Explanation
 
 == When to use it / use-cases
