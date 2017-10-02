@@ -105,7 +105,7 @@ CREATE (nAlice)-[:FRIEND]->(nBridget)
 [source,cypher]
 ----
 CALL algo.clustering.louvain.stream('User', 'FRIEND', 
-{concurrency:8) 
+{}) 
 YIELD nodeId, setId
 RETURN nodeId, setId LIMIT 20
 ----
@@ -138,7 +138,7 @@ YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis
 [source,cypher]
 ----
 CALL algo.clustering.louvain(label:String, relationship:String,
-{weightProperty:'weight', defaultValue:1.0, write: true, partitionProperty:'partition', concurrency:8}) 
+{weightProperty:'weight', defaultValue:1.0, write: true, partitionProperty:'partition', concurrency:4}) 
 YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis
 
 ----
@@ -173,7 +173,7 @@ YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis
 [source,cypher]
 ----
 CALL algo.clustering.louvain.stream(label:String, relationship:String, 
-{weightProperty:'propertyName', defaultValue:1.0, concurrency:8) 
+{weightProperty:'propertyName', defaultValue:1.0, concurrency:4}) 
 YIELD nodeId, setId - yields a setId to each node id
 ----
 
