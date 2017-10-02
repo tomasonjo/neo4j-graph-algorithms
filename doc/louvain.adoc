@@ -56,7 +56,7 @@ All except one of these communities had an 85% or greater majority of either Fre
 The sole community with a more equitable distribution was positioned at the interface between French and Dutch clusters in the top-level coarse-grained network. 
 
 Since 2008, the Louvain Method has found a wide range of applications in analyzing real-world networks. 
-Several of these can be found on  https://perso.uclouvain.be/vincent.blondel/research/louvain.html["the website" of the method]:
+Several of these can be found on  https://perso.uclouvain.be/vincent.blondel/research/louvain.html[the website of the method]:
 
 - analysis of online social networks like Twitter, LinkedIn, Flickr, Youtube, and LiveJournal
 - analysis of collaboration communities in citation networks
