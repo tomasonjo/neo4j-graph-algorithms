@@ -66,9 +66,16 @@ One application that I want to call out independently, just because I found it p
 The _Louvain_ Method, and modularity optimization algorithms more generally, have found wide application across many domains. 
 However, fundamental problems with these algorithms have also been identified. 
 
-The "resolution" limit: If you worked out the 21-clique caveman graph example that I suggested above, you would have noticed that for larger networks, the Louvain Method doesn't stop with the "intuitive" communities. Instead, there's a second pass through the community modification and coarse-graining stages, in which several of the intuitive communities are merged together. This is unfortunately a general problem with modularity optimization algorithms. They have trouble detecting small communities in large networks. It's a virtue of the Louvain Method that something close to the intuitive community structure is available as an intermediate step in the process.
+The "resolution" limit: 
+If you worked out the 21-clique caveman graph example that I suggested above, you would have noticed that for larger networks, the Louvain Method doesn't stop with the "intuitive" communities. Instead, there's a second pass through the community modification and coarse-graining stages, in which several of the intuitive communities are merged together. 
+This is unfortunately a general problem with modularity optimization algorithms. 
+They have trouble detecting small communities in large networks. 
+It's a virtue of the Louvain Method that something close to the intuitive community structure is available as an intermediate step in the process.
 
-The "degeneracy" problem: There are typically an exponentially large (in network size) number of community assignments with modularities close to the maximum. This can be a severe problem because, in the presence of a large number of high modularity solutions, it's (a) hard to find the global maximum and (b) difficult to determine if the global maximum is truly more scientifically important than local maxima that achieve similar modularity. Good et al. showed that the different locally optimal community assignments can have quite different structural properties.[4]
+The "degeneracy" problem: 
+here are typically an exponentially large (in network size) number of community assignments with modularities close to the maximum. 
+This can be a severe problem because, in the presence of a large number of high modularity solutions, it's (a) hard to find the global maximum and (b) difficult to determine if the global maximum is truly more scientifically important than local maxima that achieve similar modularity.
+Good et al. showed that the different locally optimal community assignments can have quite different structural properties.[4]
 
 This and other problems are discussed detailed in reference [3]. 
 
@@ -94,16 +101,109 @@ CREATE (nAlice)-[:FRIEND]->(nBridget)
 ,(nCharles)-[:FRIEND]->(nDoug)
 ----
 
+.Running algorithm and streaming results
 [source,cypher]
 ----
+CALL algo.clustering.louvain.stream('User', 'FRIEND', 
+{concurrency:8) 
+YIELD nodeId, setId
+RETURN nodeId, setId LIMIT 20
 ----
+
+.Running algorithm and writing back results
+[source,cypher]
+----
+CALL algo.clustering.louvain('Person', 'KNOWS', 
+{write:true, partitionProperty:'cluster'}) 
+YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis 
+----
+
+.Results
+[opts="header",cols="1,1"]
+|===
+| name | community
+| Alice | 5
+| Bridget | 5
+| Michael | 5
+| Charles | 4
+| Doug | 4
+| Mark | 4 
+|===
 
 == Example Usage
 
 == Syntax
 
+.Running algorithm and writing back results
+[source,cypher]
+----
+CALL algo.clustering.louvain(label:String, relationship:String,
+{weightProperty:'weight', defaultValue:1.0, write: true, partitionProperty:'partition', concurrency:8}) 
+YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis
+
+----
+
+.Parameters
+[opts="header",cols="1,1,1,1,4"]
+|===
+| name | type | default | optional | description
+| label  | string | null | yes | label to load from the graph, if null load all nodes
+| relationship | string | null | yes | relationship-type to load from the graph, if null load all nodes
+| weightProperty | string | null | yes | property name that contains weight, if null treats the graph as unweighted. Must be numeric.
+| write | boolean | true | yes | if result should be written back as node property
+| partitionProperty | string | 'partition' | yes | property name written back the id of the partition particular node belongs to
+| defaultValue | float | null | yes | default value of the weight in case it is missing or invalid
+| concurrency | int | available CPUs | yes | number of concurrent threads
+|===
+
+.Results
+[opts="header",cols="1,1,6"]
+|===
+| name | type | description
+| nodes | int | number of nodes considered
+| communityCount | int | number of communities found
+| iterations | int | number of iterations run
+| loadMillis | int | milliseconds for loading data
+| computeMillis | int | milliseconds for running the algorithm
+| writeMillis | int | milliseconds for writing result data back
+|===
+
+
+.Running algorithm and streaming results
+[source,cypher]
+----
+CALL algo.clustering.louvain.stream(label:String, relationship:String, 
+{weightProperty:'propertyName', defaultValue:1.0, concurrency:8) 
+YIELD nodeId, setId - yields a setId to each node id
+----
+
+.Parameters
+[opts="header",cols="1,1,1,1,4"]
+|===
+| name | type | default | optional | description
+| label  | string | null | yes | label to load from the graph, if null load all nodes
+| relationship | string | null | yes | relationship-type to load from the graph, if null load all relationships
+| weightProperty | string | null | yes | property name that contains weight, if null treats the graph as unweighted. Must be numeric.
+| defaultValue | float | 1.0 | yes | default value of the weight in case it is missing or invalid
+|===
+
+.Results
+[opts="headers"]
+|===
+| name | type | description
+| nodeId | int | node id
+| setId | int | community id
+|===
+
 == Versions 
 
+* [x] undirected, unweighted
+
+- weightProperty: null
+
+* [x] undirected, weighted 
+
+- weightProperty : 'weight'
 
 == References
 
