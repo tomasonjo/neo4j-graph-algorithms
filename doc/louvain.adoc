@@ -116,7 +116,7 @@ RETURN nodeId, setId LIMIT 20
 [source,cypher]
 ----
 CALL algo.clustering.louvain('User', 'FRIEND', 
-{write:true, writeProperty:'cluster'}) 
+{write:true, writeProperty:'community'}) 
 YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis 
 ----
 
@@ -140,7 +140,7 @@ YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis
 [source,cypher]
 ----
 CALL algo.clustering.louvain(label:String, relationship:String,
-{weightProperty:'weight', defaultValue:1.0, write: true, writeProperty:'cluster', concurrency:4}) 
+{weightProperty:'weight', defaultValue:1.0, write: true, writeProperty:'community', concurrency:4}) 
 YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis
 
 ----
@@ -153,7 +153,7 @@ YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis
 | relationship | string | null | yes | relationship-type to load from the graph, if null load all nodes
 | weightProperty | string | null | yes | property name that contains weight, if null treats the graph as unweighted. Must be numeric.
 | write | boolean | true | yes | if result should be written back as node property
-| writeProperty | string | 'cluster' | yes | property name written back the id of the community particular node belongs to
+| writeProperty | string | 'community' | yes | property name written back the id of the community particular node belongs to
 | defaultValue | float | null | yes | default value of the weight in case it is missing or invalid
 | concurrency | int | available CPUs | yes | number of concurrent threads
 |===
