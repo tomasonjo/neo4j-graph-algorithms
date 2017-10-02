@@ -77,7 +77,7 @@ public class ShortestPathDeltaSteppingProc {
                 .withProgressLogger(ProgressLogger.wrap(log, "ShortestPaths(DeltaStepping)"))
                 .withTerminationFlag(TerminationFlag.wrap(transaction))
                 .withExecutorService(Executors.newFixedThreadPool(
-                        configuration.getInt("concurrency", 4)
+                        configuration.getConcurrency()
                 )).compute(startNode.getId());
 
         graph.release();
