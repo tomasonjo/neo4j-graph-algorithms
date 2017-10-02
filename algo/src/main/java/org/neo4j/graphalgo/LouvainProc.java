@@ -40,7 +40,7 @@ public class LouvainProc {
 
     @Procedure(value = "algo.clustering.louvain", mode = Mode.WRITE)
     @Description("CALL algo.clustering.louvain(label:String, relationship:String, " +
-            "{weightProperty:'weight', defaultValue:1.0, write: true, partitionProperty:'partition', concurrency:4}) " +
+            "{property:'weight', defaultValue:1.0, write: true, partitionProperty:'partition', concurrency:8}) " +
             "YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis")
     public Stream<LouvainResult> louvain(
             @Name(value = "label", defaultValue = "") String label,
@@ -86,7 +86,7 @@ public class LouvainProc {
 
     @Procedure(value = "algo.clustering.louvain.stream")
     @Description("CALL algo.clustering.louvain.stream(label:String, relationship:String, " +
-            "{weightProperty:'propertyName', defaultValue:1.0, concurrency:4) " +
+            "{property:'propertyName', defaultValue:1.0, concurrency:8) " +
             "YIELD nodeId, setId - yields a setId to each node id")
     public Stream<Louvain.Result> louvainStream(
             @Name(value = "label", defaultValue = "") String label,

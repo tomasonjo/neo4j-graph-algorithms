@@ -3,6 +3,7 @@
 Communities are groups of nodes within a network that are more densely connected to one another than to other nodes. 
 Modularity is a metric that quantifies the quality of an assignment of nodes to communities by evaluating how much more densely connected the nodes within a community are compared to how connected they would be, on average, in a suitably defined random network. 
 The _Louvain_ method of community detection is an algorithm for detecting communities in networks that relies upon a heuristic for maximizing the modularity. 
+
 The method consists of repeated application of two steps. 
 The first step is a "greedy" assignment of nodes to communities, favoring local optimizations of modularity. 
 The second step is the definition of a new coarse-grained network in terms of the communities found in the first step. 
@@ -55,33 +56,34 @@ All except one of these communities had an 85% or greater majority of either Fre
 The sole community with a more equitable distribution was positioned at the interface between French and Dutch clusters in the top-level coarse-grained network. 
 
 Since 2008, the Louvain Method has found a wide range of applications in analyzing real-world networks. 
-Several of these can be found on the "official website" for the method:
-analysis of online social networks like Twitter, LinkedIn, Flickr, Youtube, and LiveJournal
-analysis of collaboration communities in citation networks
-analysis of a network of retail transactions
-One application that I want to call out independently, just because I found it particularly interesting, is the study of brain networks using the Louvain Method [3]. This is pretty far outside my expertise, so I won't pretend to understand all the details, but the authors of that study found similar community structure across the brains of 18 different people and modules that made sense from a functional perspective.[2]
+Several of these can be found on  https://perso.uclouvain.be/vincent.blondel/research/louvain.html["the website" of the method]:
+
+- analysis of online social networks like Twitter, LinkedIn, Flickr, Youtube, and LiveJournal
+- analysis of collaboration communities in citation networks
+- analysis of a network of retail transactions
+- study of https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2784301/[brain networks] using the Louvain Method [4]
 
 == Constraints / when not to use it
 
 The _Louvain_ Method, and modularity optimization algorithms more generally, have found wide application across many domains. 
 However, fundamental problems with these algorithms have also been identified. 
 
-The "resolution" limit: 
-If you worked out the 21-clique caveman graph example that I suggested above, you would have noticed that for larger networks, the Louvain Method doesn't stop with the "intuitive" communities. Instead, there's a second pass through the community modification and coarse-graining stages, in which several of the intuitive communities are merged together. 
+The _resolution_ limit: 
+
+For larger networks, the Louvain Method doesn't stop with the "intuitive" communities. Instead, there's a second pass through the community modification and coarse-graining stages, in which several of the intuitive communities are merged together. 
 This is unfortunately a general problem with modularity optimization algorithms. 
 They have trouble detecting small communities in large networks. 
 It's a virtue of the Louvain Method that something close to the intuitive community structure is available as an intermediate step in the process.
 
-The "degeneracy" problem: 
-here are typically an exponentially large (in network size) number of community assignments with modularities close to the maximum. 
-This can be a severe problem because, in the presence of a large number of high modularity solutions, it's (a) hard to find the global maximum and (b) difficult to determine if the global maximum is truly more scientifically important than local maxima that achieve similar modularity.
-Good et al. showed that the different locally optimal community assignments can have quite different structural properties.[4]
+The _degeneracy_ problem:
 
-This and other problems are discussed detailed in reference [3]. 
+Here are typically an exponentially large (in network size) number of community assignments with modularities close to the maximum. 
+This can be a severe problem because, in the presence of a large number of high modularity solutions, it's hard to find the global maximum and difficult to determine if the global maximum is truly more scientifically important than local maxima that achieve similar modularity.
+Good https://arxiv.org/abs/0910.0165[research] showed that the different locally optimal community assignments can have quite different structural properties.[3]
 
 == Algorithm explanation on simple sample graph
 
-image::{img}/label_propagation.png[]
+image::{img}/louvain.png[]
 
 .Create sample graph
 [source,cypher]
@@ -113,8 +115,8 @@ RETURN nodeId, setId LIMIT 20
 .Running algorithm and writing back results
 [source,cypher]
 ----
-CALL algo.clustering.louvain('Person', 'KNOWS', 
-{write:true, partitionProperty:'cluster'}) 
+CALL algo.clustering.louvain('User', 'FRIEND', 
+{write:true, writeProperty:'cluster'}) 
 YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis 
 ----
 
@@ -138,7 +140,7 @@ YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis
 [source,cypher]
 ----
 CALL algo.clustering.louvain(label:String, relationship:String,
-{weightProperty:'weight', defaultValue:1.0, write: true, partitionProperty:'partition', concurrency:4}) 
+{weightProperty:'weight', defaultValue:1.0, write: true, writeProperty:'cluster', concurrency:4}) 
 YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis
 
 ----
@@ -151,7 +153,7 @@ YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis
 | relationship | string | null | yes | relationship-type to load from the graph, if null load all nodes
 | weightProperty | string | null | yes | property name that contains weight, if null treats the graph as unweighted. Must be numeric.
 | write | boolean | true | yes | if result should be written back as node property
-| partitionProperty | string | 'partition' | yes | property name written back the id of the partition particular node belongs to
+| writeProperty | string | 'cluster' | yes | property name written back the id of the community particular node belongs to
 | defaultValue | float | null | yes | default value of the weight in case it is missing or invalid
 | concurrency | int | available CPUs | yes | number of concurrent threads
 |===
@@ -213,7 +215,9 @@ YIELD nodeId, setId - yields a setId to each node id
 
 * [3] https://arxiv.org/abs/0910.0165
 
-* [4] http://www2.econ.iastate.edu/tesfatsi/ArchitectureOfComplexity.HSimon1962.pdf
+* [4] https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2784301/
+
+
 
 
 ifdef::implementation[]
