@@ -81,7 +81,7 @@ YIELD nodes, iterations, loadMillis, computeMillis, writeMillis, write, partitio
 [source,cypher]
 ----
 CALL algo.labelPropagation(label:String, relationship:String, direction:String, {iterations:1,
-weightProperty:'weight', partitionProperty:'partition', write:true, concurrency:8}) 
+weightProperty:'weight', partitionProperty:'partition', write:true, concurrency:4}) 
 YIELD nodes, iterations, loadMillis, computeMillis, writeMillis, write, weightProperty,
 partitionProperty - simple label propagation kernel
 ----

@@ -108,7 +108,7 @@ k/S| 0.4  0.57  0.67  0.57   0.4     // normalized closeness centrality
 [source,cypher]
 ----
 CALL algo.closeness(label:String, relationship:String, 
-{write:true, writeProperty:'centrality',graph:'heavy', concurrency:8}) 
+{write:true, writeProperty:'centrality',graph:'heavy', concurrency:4}) 
 YIELD nodes,loadMillis, computeMillis, writeMillis 
 - calculates closeness centrality and potentially writes back
 ----
@@ -141,7 +141,7 @@ YIELD nodes,loadMillis, computeMillis, writeMillis
 .Running algorithm and streaming results
 [source,cypher]
 ----
-CALL algo.closeness.stream(label:String, relationship:String,{concurrency:8}) 
+CALL algo.closeness.stream(label:String, relationship:String,{concurrency:4}) 
 YIELD nodeId, centrality - yields centrality for each node
 ----
 

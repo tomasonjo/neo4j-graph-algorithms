@@ -126,7 +126,7 @@ We can observe, that because the weight of the relationship betwen Bridget and A
 [source,cypher]
 ----
 CALL algo.unionFind(label:String, relationship:String, {threshold:0.42,
-defaultValue:1.0, write: true, partitionProperty:'partition',weightProperty:'weight',graph:'heavy',concurrency:8}) 
+defaultValue:1.0, write: true, partitionProperty:'partition',weightProperty:'weight',graph:'heavy',concurrency:4}) 
 YIELD nodes, setCount, loadMillis, computeMillis, writeMillis
 - finds connected partitions and potentially writes back to the node as a property partition. 
 
@@ -162,7 +162,7 @@ YIELD nodes, setCount, loadMillis, computeMillis, writeMillis
 .Running algorithm and streaming results
 [source,cypher]
 ----
-CALL algo.unionFind.stream(label:String, relationship:String, {weightProperty:'weight', threshold:0.42, defaultValue:1.0, concurrency:8}) 
+CALL algo.unionFind.stream(label:String, relationship:String, {weightProperty:'weight', threshold:0.42, defaultValue:1.0, concurrency:4}) 
 YIELD nodeId, setId - yields a setId to each node id
 ----
 
