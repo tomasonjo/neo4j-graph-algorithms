@@ -71,7 +71,7 @@ public class BetweennessCentralityProc {
      * Procedure accepts {in, incoming, <, out, outgoing, >, both, <>} as direction
      */
     @Procedure(value = "algo.betweenness.stream")
-    @Description("CALL algo.betweenness.stream(label:String, relationship:String, {direction:'out', concurrency :8})" +
+    @Description("CALL algo.betweenness.stream(label:String, relationship:String, {direction:'out', concurrency :4})" +
                  "YIELD nodeId, centrality - yields centrality for each node")
     public Stream<BetweennessCentrality.Result> betweennessStream(
             @Name(value = "label", defaultValue = "") String label,
@@ -166,7 +166,7 @@ public class BetweennessCentralityProc {
 
 
     @Procedure(value = "algo.betweenness", mode = Mode.WRITE)
-    @Description("CALL algo.betweenness(label:String, relationship:String, {direction:'out',write:true, writeProperty:'centrality', stats:true, concurrency:8}) YIELD " +
+    @Description("CALL algo.betweenness(label:String, relationship:String, {direction:'out',write:true, writeProperty:'centrality', stats:true, concurrency:4}) YIELD " +
             "loadMillis, computeMillis, writeMillis, nodes, minCentrality, maxCentrality, sumCentrality - yields status of evaluation")
     public Stream<BetweennessCentralityProcResult> betweenness(
             @Name(value = "label", defaultValue = "") String label,
