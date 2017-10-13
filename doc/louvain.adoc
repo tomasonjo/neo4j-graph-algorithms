@@ -88,36 +88,19 @@ image::{img}/louvain.png[]
 .Create sample graph
 [source,cypher]
 ----
-CREATE (nAlice:User {id:'Alice'})
-,(nBridget:User {id:'Bridget'})
-,(nCharles:User {id:'Charles'})
-,(nDoug:User {id:'Doug'})
-,(nMark:User {id:'Mark'})
-,(nMichael:User {id:'Michael'})
-CREATE (nAlice)-[:FRIEND]->(nBridget)
-,(nAlice)-[:FRIEND]->(nCharles)
-,(nMark)-[:FRIEND]->(nDoug)
-,(nBridget)-[:FRIEND]->(nMichael)
-,(nCharles)-[:FRIEND]->(nMark)
-,(nAlice)-[:FRIEND]->(nMichael)
-,(nCharles)-[:FRIEND]->(nDoug)
+include::scripts/louvain.cypher[tag=create-sample-graph]
 ----
 
 .Running algorithm and streaming results
 [source,cypher]
 ----
-CALL algo.clustering.louvain.stream('User', 'FRIEND', 
-{}) 
-YIELD nodeId, setId
-RETURN nodeId, setId LIMIT 20
+include::scripts/louvain.cypher[tag=stream-sample-graph]
 ----
 
 .Running algorithm and writing back results
 [source,cypher]
 ----
-CALL algo.clustering.louvain('User', 'FRIEND', 
-{write:true, writeProperty:'community'}) 
-YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis 
+include::scripts/louvain.cypher[tag=write-sample-graph]
 ----
 
 .Results
@@ -133,6 +116,13 @@ YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis
 |===
 
 == Example Usage
+
+
+.Running algorithm and writing back results
+[source,cypher]
+----
+include::scripts/louvain.cypher[tag=write-yelp]
+----
 
 == Syntax
 

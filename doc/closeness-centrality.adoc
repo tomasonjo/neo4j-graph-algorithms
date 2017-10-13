@@ -45,33 +45,20 @@ image::{img}/closeness_centrality.png[]
 .Create sample graph
 [source,cypher]
 ----
-CREATE (a:Node{id:"A"}),
-       (b:Node{id:"B"}),
-       (c:Node{id:"C"}),
-       (d:Node{id:"D"}),
-       (e:Node{id:"E"})
-CREATE (a)-[:LINK]->(b),
-       (b)-[:LINK]->(a),
-       (b)-[:LINK]->(c),
-       (c)-[:LINK]->(b),
-       (c)-[:LINK]->(d),
-       (d)-[:LINK]->(c),
-       (d)-[:LINK]->(e),
-       (e)-[:LINK]->(d)
+include::scripts/closeness-centrality.cypher[tag=create-sample-graph
 ----
 
 .Running algorithm and streaming results
 [source,cypher]
 ----
-CALL algo.closeness.stream('Node', 'LINKS') YIELD nodeId, centrality
-RETURN nodeId,centrality order by centrality desc limit 20 - yields centrality for each node
+include::scripts/closeness-centrality.cypher[tag=stream-sample-graph
+- yields centrality for each node
 ----
 
 .Running algorithm and writing back results
 [source,cypher]
 ----
-CALL algo.closeness('Node', 'LINK', {write:true, writeProperty:'centrality'}) 
-YIELD nodes,loadMillis, computeMillis, writeMillis 
+include::scripts/closeness-centrality.cypher[tag=write-sample-graph
 - calculates closeness centrality and potentially writes back
 ----
 

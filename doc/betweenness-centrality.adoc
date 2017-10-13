@@ -42,33 +42,19 @@ People with high betweenness tend to be the innovators and brokers in any networ
 .Create sample graph
 [source,cypher]
 ----
-CREATE (nAlice:User {id:'Alice'})
-,(nBridget:User {id:'Bridget'})
-,(nCharles:User {id:'Charles'})
-,(nDoug:User {id:'Doug'})
-,(nMark:User {id:'Mark'})
-,(nMichael:User {id:'Michael'})
-CREATE (nAlice)-[:MANAGE]->(nBridget)
-,(nAlice)-[:MANAGE]->(nCharles)
-,(nAlice)-[:MANAGE]->(nDoug)
-,(nMark)-[:MANAGE]->(nAlice)
-,(nCharles)-[:MANAGE]->(nMichael)
-
+include::scripts/betweenness-centrality.cypher[tag=create-sample-graph]
 ----
 
 .Running algorithm and streaming results
 [source,cypher]
 ----
-CALL algo.betweenness.stream('User','MANAGE',{direction:'out'}) 
-YIELD nodeId, centrality 
-RETURN nodeId,centrality order by centrality desc limit 20
+include::scripts/betweenness-centrality.cypher[tag=stream-sample-graph]
 ----
 
 .Running algorithm and writing back results
 [source,cypher]
 ----
-CALL algo.betweenness('User','MANAGE', {direction:'out',write:true, writeProperty:'centrality'}) 
-YIELD nodes, minCentrality, maxCentrality, sumCentrality, loadMillis, computeMillis, writeMillis
+include::scripts/betweenness-centrality.cypher[tag=write-sample-graph
 ----
 
 .Results
