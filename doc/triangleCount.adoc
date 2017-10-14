@@ -62,10 +62,22 @@ include::scripts/triangle-count.cypher[tag=triangle-stream-sample-graph]
 
 == Example Usage
 
+In graph theory, a clustering coefficient is a measure of the degree to which nodes in a graph tend to cluster together.
+Evidence suggests that in most real-world networks, and in particular social networks, nodes tend to create tightly knit groups characterised by a relatively high density of ties; this likelihood tends to be greater than the average probability of a tie randomly established between two nodes.[4] 
+
+We check if this holds true for Yelp's social network of friends.
+
 [source,cypher]
 ----
 include::scripts/triangle-count.cypher[tag=triangle-write-yelp]
 ----
+
+Average clustering coefficient is 0.0523, which is really low for a social network. 
+This indicates that groups of friends are not tightly knit together, but rather sparse.
+We can assume that users are not on Yelp for finding and creating friends, like for example Facebook, but rather something else, like finding good restaurant recommendations.
+
+   
+Local triangle count and clustering coefficient of nodes can be used as features in finding influencers in social networks.
 
 == Syntax
 
@@ -185,6 +197,8 @@ We support the following versions of the triangle count algorithms:
 * [2] http://i11www.iti.kit.edu/extra/publications/sw-fclt-05_t.pdf
 
 * [3] http://www.math.cmu.edu/~ctsourak/tsourICDM08.pdf
+
+* [4] https://en.wikipedia.org/wiki/Clustering_coefficient
 
 
 ifdef::implementation[]

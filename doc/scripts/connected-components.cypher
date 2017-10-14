@@ -50,23 +50,27 @@ ORDER by size_of_partition DESC LIMIT 20;
 
 // end::check-results-sample-graph[]
 
-// tag::count-component-example[]
+// tag::count-component-yelp[]
 
 CALL algo.unionFind.stream('User', 'FRIEND', {}) 
 YIELD nodeId,setId
 RETURN count(distinct setId) as count_of_components;
 
-// end::count-component-example[]
+// end::count-component-yelp[]
 
-// tag::top-20-component-example[]
+// tag::top-20-component-yelp[]
 
 CALL algo.unionFind.stream('User', 'FRIEND', {}) 
 YIELD nodeId,setId
 RETURN setId,count(*) as size_of_component
 ORDER BY size_of_component LIMIT 20;
 
-// end::top-20-component-example[]
+// end::top-20-component-yelp[]
 
+// tag::cypher-loading[]
 
+CALL algo.unionFind('MATCH (p:User) RETURN id(p) as id',
+'MATCH (p1:User)-[:FRIEND]->(p2:User) RETURN id(p1) as source, id(p2) as target',
+{graph:'cypher',write:true});
 
-
+// end::cypher-loading[]

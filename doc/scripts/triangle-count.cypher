@@ -38,7 +38,7 @@ YIELD loadMillis, computeMillis, writeMillis, nodeCount, triangleCount, averageC
 CALL algo.triangleCount.stream('Person', 'KNOWS', {concurrency:4}) 
 YIELD nodeId, triangles;
 
-// tag::triangle-stream-sample-graph[]
+// end::triangle-stream-sample-graph[]
 
 // tag::triangle-write-yelp[]
 

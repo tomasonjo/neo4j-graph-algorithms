@@ -29,3 +29,12 @@ CALL algo.closeness('Node', 'LINK', {write:true, writeProperty:'centrality'})
 YIELD nodes,loadMillis, computeMillis, writeMillis;
 
 // end::write-sample-graph[]
+
+// tag::cypher-loading[]
+
+CALL algo.closeness(
+'MATCH (p:Node) RETURN id(p) as id',
+'MATCH (p1:Node)-[:LINK]->(p2:Node) RETURN id(p1) as source, id(p2) as target',
+{graph:'cypher', write: true});
+
+// end::cypher-loading[]

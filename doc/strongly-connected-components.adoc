@@ -57,8 +57,7 @@ We can see that we have 2 strongly connected components in our sample graph. The
 .Find the largest partition
 [source,cypher]
 ----
-MATCH (u:User)
-RETURN u.partition as partition,count(*) as size_of_partition ORDER by size_of_partition DESC LIMIT 1
+include::scripts/strongly-connected-components.cypher[tag=get-largest-component]
 ----
 == Example Usage
 
@@ -106,10 +105,7 @@ Set `graph:'cypher'` in the config.
 
 [source,cypher]
 ----
-CALL algo.scc('MATCH (u:User) RETURN id(u) as id',
-'MATCH (u1:User)-[:FOLLOW]->(u2:User) RETURN id(u1) as source,id(u2) as target',
-{write:true,graph:'cypher'})
-YIELD loadMillis, computeMillis, writeMillis
+include::scripts/strongly-connected-components.cypher[tag=cypher-loading]
 ----
 == Implementations
 

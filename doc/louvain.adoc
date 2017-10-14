@@ -118,11 +118,7 @@ include::scripts/louvain.cypher[tag=write-sample-graph]
 == Example Usage
 
 
-.Running algorithm and writing back results
-[source,cypher]
-----
-include::scripts/louvain.cypher[tag=write-yelp]
-----
+
 
 == Syntax
 

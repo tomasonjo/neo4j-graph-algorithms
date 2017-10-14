@@ -20,7 +20,7 @@ CALL algo.betweenness.stream('User','MANAGE',{direction:'out'})
 YIELD nodeId, centrality 
 RETURN nodeId,centrality order by centrality desc limit 20;
 
-// tag::stream-sample-graph[]
+// end::stream-sample-graph[]
 
 // tag::write-sample-graph[]
 
@@ -28,3 +28,12 @@ CALL algo.betweenness('User','MANAGE', {direction:'out',write:true, writePropert
 YIELD nodes, minCentrality, maxCentrality, sumCentrality, loadMillis, computeMillis, writeMillis;
 
 // end::write-sample-graph[]
+
+// tag::cypher-loading[]
+
+CALL algo.betweenness(
+'MATCH (p:User) RETURN id(p) as id',
+'MATCH (p1:User)-[:MANAGE]->(p2:User) RETURN id(p1) as source, id(p2) as target',
+{graph:'cypher', write: true});
+
+// end::cypher-loading[]
