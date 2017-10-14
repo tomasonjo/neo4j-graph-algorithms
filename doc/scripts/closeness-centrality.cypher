@@ -21,7 +21,7 @@ CREATE (a)-[:LINK]->(b),
 CALL algo.closeness.stream('Node', 'LINKS') YIELD nodeId, centrality
 RETURN nodeId,centrality order by centrality desc limit 20;
 
-// tag::stream-sample-graph[]
+// end::stream-sample-graph[]
 
 // tag::write-sample-graph[]
 
