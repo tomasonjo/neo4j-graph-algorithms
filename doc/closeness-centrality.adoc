@@ -26,7 +26,7 @@ Our algorithm returns *normalized closeness centrality* score.
 
 As an example, one can consider identifying the location within a city where to place a new public service, so that it is easily accessible for everyone. 
 Similarly, identifying central people that have ideal social network location for the purpose of information dissemination or network influence. 
-In such kind of applications, the nodes who can access the entire network faster need to be selected..
+In such kind of applications, the nodes who can access the entire network faster need to be selected.
 
 This measure is preferable to degree centrality, because it does not take into account only direct connections among nodes, but also indirect connections.
 For closeness centrality in directed networks, we split the concept into in-closeness

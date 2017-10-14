@@ -38,11 +38,6 @@ Moreover, it is computationally expensive to determine the community size.
 Hence, algorithms that are able to detect communities from complex networks without having any knowledge about the number of communities or the size of communities are essential. 
 _Label Propagation_ algorithms (LPA) are such type of algorithms that detects community structure that uses network structure alone as its guide and requires neither a pre-defined objective function nor prior information about the communities. 
 
-In many real-world applications in data mining, information retrieval and pattern recognition, labeled data are usually very insufficient and labeling a huge number of data points needs expensive human labor and takes much time.
-On the other hand, unlabeled data may be abundant and can be easily and cheaply obtained.
-Thus how to use the labeled and unlabeled data to improve the performance becomes an important problem.
-
-
 == Constraints / when not to use it
 
 == Algorithm explanation on simple sample graph
@@ -115,11 +110,11 @@ We support the following versions of the label propagation algorithms:
 
 * [x] directed, unweighted:  
 
-- weightProperty: null
+** weightProperty: null
 
 * [x] directed, weighted 
 
-- weightProperty : 'weight'
+** weightProperty : 'weight'
 
 * [ ] undirected, unweighted
 

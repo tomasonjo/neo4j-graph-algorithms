@@ -187,11 +187,11 @@ YIELD nodeId, setId - yields a setId to each node id
 
 * [x] undirected, unweighted
 
-- weightProperty: null
+** weightProperty: null
 
 * [x] undirected, weighted 
 
-- weightProperty : 'weight'
+** weightProperty : 'weight'
 
 == References
 

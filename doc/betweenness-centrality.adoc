@@ -163,14 +163,14 @@ We support the following versions of the betweenness centrality algorithm:
 
 * [x] directed, unweighted
 
-	- loading incoming relationships: 'INCOMING','IN','I' or '<'
-	- loading outgoing relationships: 'OUTGOING','OUT','O' or '>'
+** loading incoming relationships: 'INCOMING','IN','I' or '<'
+** loading outgoing relationships: 'OUTGOING','OUT','O' or '>'
 
 * [ ] directed, weighted
 
 * [x] undirected, unweighted
 
-	- direction:'both' or '<>'
+** direction:'both' or '<>'
 
 * [ ] undirected, weighted 
 
