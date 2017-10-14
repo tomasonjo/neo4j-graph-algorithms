@@ -69,13 +69,6 @@ YIELD nodes, iterations, loadMillis, computeMillis, writeMillis, write, weightPr
 partitionProperty - simple label propagation kernel
 ----
 
-.Running algorithms with pre-existing labels
-[source,cypher]
-----
-CALL algo.labelPropagation('User', 'FOLLOW','OUTGOING', {iterations:10,partitionProperty:'label', write:true}) 
-YIELD nodes, iterations, loadMillis, computeMillis, writeMillis
-----
-
 .Parameters
 [opts="header",cols="1,1,1,1,4"]
 |===
