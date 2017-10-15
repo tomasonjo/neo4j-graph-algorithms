@@ -22,10 +22,10 @@ Finding patterns in large scale graphs, with millions and billions of edges is a
 One of the operations of interest in such a setting is the estimation of the clustering coefficient and the transitivity ratio, which effectively translates to the number of triangles in the graph, or the number of triangles that a node participates in.
 It is known that in social networks there is a higher than-random number of triangles. 
 The reason is that friends of friends are typically friends themselves.
-Thus, the number of triangles can help us spot abnormal graphs and abnormal nodes.
-More-than-expected number of triangles also appear in biological networks,such as protein-protein interaction networks.
-A very recent work shows that the distribution of the local number of triangles can be used to create successful spam filters and also provide useful features to assess content quality in social networks. 
-In the distribution of triangles is used to uncover hidden thematic structure in the World Wide Web. 
+Thus, the number of triangles can help us spot abnormal graphs and abnormal nodes https://pdfs.semanticscholar.org/110b/55a017f52abfedca220036ea129d84b7cadc.pdf[[5\]].
+More-than-expected number of triangles also appear in biological networks,such as protein-protein interaction networks https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/1471-2105-6-270?site=bmcbioinformatics.biomedcentral.com[[7\]].
+A very recent work https://pdfs.semanticscholar.org/110b/55a017f52abfedca220036ea129d84b7cadc.pdf[[5\]] shows that the distribution of the local number of triangles can be used to create successful spam filters and also provide useful features to assess content quality in social networks. 
+In http://www.pnas.org/content/99/9/5825.full.pdf[[6\]] the distribution of triangles is used to uncover hidden thematic structure in the World Wide Web. 
 Therefore, counting triangles is a significant problem in graph mining, with several important applications.[3]
 
 == Constraints / when not to use it
@@ -78,6 +78,7 @@ We can assume that users are not on Yelp for finding and creating friends, like 
 
    
 Local triangle count and clustering coefficient of nodes can be used as features in finding influencers in social networks.
+
 
 == Syntax
 
@@ -199,6 +200,13 @@ We support the following versions of the triangle count algorithms:
 * [3] http://www.math.cmu.edu/~ctsourak/tsourICDM08.pdf
 
 * [4] https://en.wikipedia.org/wiki/Clustering_coefficient
+
+* [5] https://pdfs.semanticscholar.org/110b/55a017f52abfedca220036ea129d84b7cadc.pdf
+
+* [6] http://www.pnas.org/content/99/9/5825.full.pdf
+
+* [7] https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/1471-2105-6-270?site=bmcbioinformatics.biomedcentral.com
+
 
 
 ifdef::implementation[]
