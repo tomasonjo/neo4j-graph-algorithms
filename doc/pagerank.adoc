@@ -114,8 +114,8 @@ If you will check closely you can see that we saved the social network as an und
 For now there is no option to load the the relationship as undirected, but we can use cypher loading to help us solve this.
 Undirected graph can be represented as https://en.wikipedia.org/wiki/Bidirected_graph[Bidirected graph], that is a directed graph in which the reverse of every relationship is also a relationship. 
 
-We do not have to save the relationship, we can project it using *cypher loading*.
-We load all relationships and then use `UNION` to load all relationships with reversed directions.
+We do not have to save this reversed relationship, we can project it using *cypher loading*.
+We load all relationships and then use `UNION` to also load all relationships with reversed directions.
 This is applicable to all other algorithms, that use *cypher loading*.
 
 .Running algorithm on Yelp social network
