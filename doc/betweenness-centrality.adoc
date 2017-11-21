@@ -263,7 +263,7 @@ Cypher loading for now does not allow loading a single relationship as undirecte
 
 == Versions 
 
-Label loading supports the following versions of the betweenness centrality algorithm:
+We supports the following versions of the betweenness centrality algorithm:
 
 * [x] directed, unweighted
 
