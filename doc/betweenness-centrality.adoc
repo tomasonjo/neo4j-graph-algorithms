@@ -75,6 +75,43 @@ include::scripts/betweenness-centrality.cypher[tag=write-sample-graph]
 
 We can see that Alice is the main broker in this network and Charles is a minor broker.
 
+== Approximation of betweenness centrality
+
+Currently, the fastest known algorithm for exactly computing betweenness of all the vertices, designed by Brandes, requires at least O(nm) time for unweighted graphs, where n
+is the number of vertices and m is the number of edges. 
+Thus, for large-scale graphs, exact centrality computation on current workstations is not practically viable.[2] 
+
+Fast betweenness estimation is thus an important problem, as a good approximation is an acceptable alternative to exact scores.
+
+
+=== RA-Brandes Algorithm
+
+RA-Brandes algorithm, proposed by Brandes and Pich[3], is different from original Brandes’ algorithm in only one main respect: Brandes’ algorithm considers all nodes within the graph, while RA-Brandes considers only a subset of nodes, also known as pivots, from the graph.
+
+We implement two strategies of selecting the subset of nodes:
+
+* random: nodes are selected at random with an uniform probability of selection. Default probability is `log10(N) / e^2`. If probability is 1 algorihm works as original Brandes, where all nodes are loaded, given probability any node will load is 100%.
+
+* degree: first calculates the mean degree of the nodes and then allows only nodes whose degree is higher then the mean, so that only dense nodes are visited
+
+.Running algorithm and streaming results
+[source,cypher]
+----
+CALL algo.betweenness.sampled.stream('User','FRIEND', 
+{strategy:'random', probability:1.0}) 
+YIELD nodeId, centrality
+----
+
+.Running algorithm and writing back results
+[source,cypher]
+----
+CALL algo.betweenness.sampled('User','FRIEND', 
+{strategy:'random', probability:1.0, writeProperty:'sampled'}) 
+YIELD nodes, minCentrality, maxCentrality
+----
+
+
+
 == Example Usage
 
 == Syntax
@@ -153,9 +190,11 @@ Set `graph:'cypher'` in the config.
 include::scripts/betweenness-centrality.cypher[tag=cypher-loading]
 ----
 
+Cypher loading for now does not allow loading a single relationship as undirected but we can project it undirected if we want to. Below are the supported label-loading versions
+
 == Versions 
 
-We support the following versions of the betweenness centrality algorithm:
+Label loading supports the following versions of the betweenness centrality algorithm:
 
 * [x] directed, unweighted
 
@@ -186,6 +225,15 @@ We support the following versions of the betweenness centrality algorithm:
  regarding the dependency-accumulation step.
 - Does not support undirected graph 
 
+`algo.betweenness.sampled()`
+
+- Calculates betweenness-dependencies on a subset of pivot nodes (instead of all nodes). Up to now 2 randomization strategies are implemented which can be set using the optional argument strategy:
+
+- random selection(default): strategy:'random': (takes optional argument probability:double(0-1) or log10(N) / e^2 as default)
+- degree based randomization: strategy:'degree': (makes dense nodes more likely)
+- optional Arguments: maxDepth:int 
+
+
 == References
 
 * http://cass-mt.pnnl.gov/docs/pubs/georgiatechlbnlpnnlfastbc-mtaap2009.pdf
@@ -206,6 +254,9 @@ We support the following versions of the betweenness centrality algorithm:
 
 * [1] https://arxiv.org/pdf/1702.06087.pdf
 
+* [2] https://www.cc.gatech.edu/~mihail/WAW07.pdf
+
+* [3] https://pdfs.semanticscholar.org/2e0d/94d072d79ba73c9a153a228b93520b3ce670.pdf
 
 ifdef::implementation[]
 // tag::implementation[]
@@ -246,6 +297,14 @@ In graph theory, betweenness centrality is a measure of centrality in a graph ba
 - The algorithm is based on Brandes definition but with some changes
  regarding the dependency-accumulation step.
 - http://cass-mt.pnnl.gov/docs/pubs/georgiatechlbnlpnnlfastbc-mtaap2009.pdf
+
+=== algo.betweenness.sampled.*
+
+- Calculates betweenness-dependencies on a subset of pivot nodes (instead of all nodes). Up to now 2 randomization strategies are implemented which can be set using the optional argument strategy:
+
+- random selection(default): strategy:'random': (takes optional argument probability:double(0-1) or log10(N) / e^2 as default)
+- degree based randomization: strategy:'degree': (makes dense nodes more likely)
+
 
 // end::implementation[]
 endif::implementation[]

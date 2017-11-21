@@ -15,11 +15,34 @@ Like closeness centrality but on disconnected graphs
 
 == Algorithm explanation on simple sample graph
 
+image::{img}/harmonic_centrality.png[]
 
 
-Disconnected-Graph:
+We create a disconnected graph to show how we combat it
 
- (A)<-->(B)<-->(C)  (D)<-->(E)
+.Create sample graph
+[source,cypher]
+----
+include::scripts/harmonic-centrality.cypher[tag=create-sample-graph]
+----
+
+
+
+
+
+.Running algorithm and streaming results
+[source,cypher]
+----
+include::scripts/harmonic-centrality.cypher[tag=stream-sample-graph]
+- yields centrality for each node
+----
+
+.Running algorithm and writing back results
+[source,cypher]
+----
+include::scripts/harmonic-centrality.cypher[tag=write-sample-graph]
+- calculates closeness centrality and potentially writes back
+----
 
 Calculation:
 
@@ -89,7 +112,7 @@ YIELD nodes,loadMillis, computeMillis, writeMillis
 .Running algorithm and streaming results
 [source,cypher]
 ----
-CALL algo.closeness.stream(label:String, relationship:String,{concurrency:4}) 
+CALL algo.harmonic.stream(label:String, relationship:String,{concurrency:4}) 
 YIELD nodeId, centrality - yields centrality for each node
 ----
 
@@ -118,7 +141,7 @@ Set `graph:'cypher'` in the config.
 
 [source,cypher]
 ----
-include::scripts/closeness-centrality.cypher[tag=cypher-loading]
+include::scripts/harmonic-centrality.cypher[tag=cypher-loading]
 ----
 
 == Versions 
@@ -136,7 +159,7 @@ We support the following versions of the betweenness centrality algorithm:
 
 == References
 
-* https://infoscience.epfl.ch/record/200525/files/[EN]ASNA09.pdf?
+* \https://infoscience.epfl.ch/record/200525/files/[[EN]]ASNA09.pdf?
 
 ifdef::implementation[]
 // tag::implementation[]
