@@ -34,10 +34,9 @@ Because harmonic centrality was proposed as an alternative to closeness centrali
 As an example, one can consider identifying the location within a city where to place a new public service, so that it is easily accessible for everyone. 
 Similarly, identifying central people that have ideal social network location for the purpose of information dissemination or network influence. 
 In such kind of applications, the nodes who can access the entire network faster need to be selected.
+As mentioned above it can be fruitfully applied to graphs that are not connected.
 
 == Constraints / when not to use it
-
-
 
 == Algorithm explanation on simple sample graph
 
