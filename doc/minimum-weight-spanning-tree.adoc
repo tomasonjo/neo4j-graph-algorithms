@@ -11,7 +11,6 @@ also available is the maximumSpanningTree `algo.spanningTree.maximum`
 A _Minimum Weight Spanning Tree_ (MST) is a subset of the relationships of a connected, weighted undirected graph that connects all the nodes together, without any cycles and with the minimum possible total edge weight.
 That is, it is a spanning tree whose sum of relationship weights is as small as possible.
 Our current approach uses _Prim's Algorithm_ to calculate the MST starting at a given node. 
-It can be used to cluster the graph (KMeans).
 
 == History, Explanation
 
@@ -57,16 +56,49 @@ include::scripts/minimum-weight-spanning-tree.cypher[tag=create-sample-graph]
 
 ----
 
-.Running algorithm and writing back results 
+.Running minimum algorithm and writing back results 
 [source,cypher]
 ----
-include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-graph]
+include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-minst-graph]
 
 ----
 
 .Results
-image::{img}/mst_result.png[]
 
+image::{img}/minst_result.png[]
+
+
+.Running maximum algorithm and writing back results 
+[source,cypher]
+----
+include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-maxst-graph]
+
+----
+
+.Results
+
+image::{img}/maxst_result.png[]
+
+=== k-Spanning tree
+
+.Running k-minimum algorithm and writing back results 
+[source,cypher]
+----
+include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-kminst-graph]
+
+----
+
+.Results
+
+
+.Running k-maximum algorithm and writing back results 
+[source,cypher]
+----
+include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-kmaxst-graph]
+
+----
+
+.Results
 
 == Example Usage
 
@@ -75,17 +107,50 @@ image::{img}/mst_result.png[]
 .Running algorithm and writing back results
 [source,cypher]
 ----
-CALL algo.spanningTree(label:String, relationshipType:String, weightProperty:String, startNodeId:long, {writeProperty:String}) YIELD loadMillis, computeMillis, writeMillis, weightSum, effectiveNodeCount
+CALL algo.spanningTree(label:String, relationshipType:String, weightProperty:String, startNodeId:long, {writeProperty:String}) 
+YIELD loadMillis, computeMillis, writeMillis, effectiveNodeCount
 ----
 
 .Parameters
 [opts="header",cols="1,1,1,1,4"]
 |===
 | name | type | default | optional | description
-| label  | String | null | no | node label
+| label  | String | null | no | label to load from the graph. If null load all nodes
+| relationshipType  | String | null | no | relationship-type to load from the graph. If null load all nodes
+| weightProperty | string | null | no | property name that contains weight. Must be numeric.
+| startNodeId | long | null | no | start node id
+| write | boolean | true | yes | if result should be written back as relationships
+| writeProperty | string | 'mst' | yes | relationship-type written back as result
+
+|===
+
+.Results
+[opts="header",cols="1,1,6"]
+|===
+| name | type | description
+| effectiveNodeCount | int | number of visited nodes
+| loadMillis | int | milliseconds for loading data
+| computeMillis | int | milliseconds for running the algorithm
+| writeMillis | int | milliseconds for writing result data back
+|===
+
+
+.Running k-ST algorithm and writing back results
+[source,cypher]
+----
+CALL algo.spanningTree(label:String, relationshipType:String, weightProperty:String, startNodeId:long, k:int, {writeProperty:String}) 
+YIELD loadMillis, computeMillis, writeMillis, effectiveNodeCount
+----
+
+.Parameters
+[opts="header",cols="1,1,1,1,4"]
+|===
+| name | type | default | optional | description
+| label  | String | null | no | label to load from the graph. If null load all nodes
 | relationshipType  | String | null | no | relationship type
 | weightProperty | string | null | no | property name that contains weight. Must be numeric.
 | startNodeId | long | null | no | start node id
+| k | int | null | no | result is a tree with k nodes and k − 1 relationships
 | write | boolean | true | yes | if result should be written back as node property
 | writeProperty | string | 'mst' | yes | relationship-type written back as result
 
@@ -95,12 +160,12 @@ CALL algo.spanningTree(label:String, relationshipType:String, weightProperty:Str
 [opts="header",cols="1,1,6"]
 |===
 | name | type | description
-| weightSum | int | sum of all weights in the MST
 | effectiveNodeCount | int | number of visited nodes
 | loadMillis | int | milliseconds for loading data
 | computeMillis | int | milliseconds for running the algorithm
 | writeMillis | int | milliseconds for writing result data back
 |===
+
 
 == Versions 
 
