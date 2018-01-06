@@ -107,7 +107,7 @@ include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-kmaxst-gra
 .Running algorithm and writing back results
 [source,cypher]
 ----
-CALL algo.spanningTree(label:String, relationshipType:String, weightProperty:String, startNodeId:long, {writeProperty:String}) 
+CALL algo.spanningTree(label:String, relationshipType:String, weightProperty:String, startNodeId:int, {writeProperty:String}) 
 YIELD loadMillis, computeMillis, writeMillis, effectiveNodeCount
 ----
 
@@ -138,7 +138,7 @@ YIELD loadMillis, computeMillis, writeMillis, effectiveNodeCount
 .Running k-ST algorithm and writing back results
 [source,cypher]
 ----
-CALL algo.spanningTree(label:String, relationshipType:String, weightProperty:String, startNodeId:long, k:int, {writeProperty:String}) 
+CALL algo.spanningTree(label:String, relationshipType:String, weightProperty:String, startNodeId:int, k:int, {writeProperty:String}) 
 YIELD loadMillis, computeMillis, writeMillis, effectiveNodeCount
 ----
 
@@ -149,7 +149,7 @@ YIELD loadMillis, computeMillis, writeMillis, effectiveNodeCount
 | label  | String | null | no | label to load from the graph. If null load all nodes
 | relationshipType  | String | null | no | relationship type
 | weightProperty | string | null | no | property name that contains weight. Must be numeric.
-| startNodeId | long | null | no | start node id
+| startNodeId | int | null | no | start node id
 | k | int | null | no | result is a tree with k nodes and k − 1 relationships
 | write | boolean | true | yes | if result should be written back as node property
 | writeProperty | string | 'mst' | yes | relationship-type written back as result

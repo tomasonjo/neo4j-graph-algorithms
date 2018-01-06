@@ -225,6 +225,8 @@ include::scripts/louvain.cypher[tag=cypher-loading]
 
 
 ifdef::implementation[]
+// tag::implementation[]
+
 
 == Implementation Details
 
@@ -245,6 +247,5 @@ _Louvain_ is an algorithm for detecting graph partitions in networks that relies
 
 == Details
 
-*not yet implemented*
-
+// end::implementation[]
 endif::implementation[]
