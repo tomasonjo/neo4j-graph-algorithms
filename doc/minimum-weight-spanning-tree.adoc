@@ -11,7 +11,7 @@ also available is the maximumSpanningTree `algo.spanningTree.maximum`
 A _Minimum Weight Spanning Tree_ (MST) is a subset of the relationships of a connected, weighted undirected graph that connects all the nodes together, without any cycles and with the minimum possible total edge weight.
 That is, it is a spanning tree whose sum of relationship weights is as small as possible.
 Our current approach uses _Prim's Algorithm_ to calculate the MST starting at a given node.
-It can be used to cluster the graph (KMeans). 
+It can be used to cluster the graph (KMeans).
 
 == History, Explanation
 
@@ -168,10 +168,10 @@ YIELD loadMillis, computeMillis, writeMillis, effectiveNodeCount
 |===
 
 
-.Running k-ST algorithm and writing back results
+.Running k-spanning tree algorithm and writing back results
 [source,cypher]
 ----
-CALL algo.spanningTree(label:String, relationshipType:String, weightProperty:String, startNodeId:int, k:int, {writeProperty:String}) 
+CALL algo.spanningTree.k*(label:String, relationshipType:String, weightProperty:String, startNodeId:int, k:int, {writeProperty:String}) 
 YIELD loadMillis, computeMillis, writeMillis, effectiveNodeCount
 ----
 
