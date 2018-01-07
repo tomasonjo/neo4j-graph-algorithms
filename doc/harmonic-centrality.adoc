@@ -166,11 +166,7 @@ include::scripts/harmonic-centrality.cypher[tag=cypher-loading]
 
 == Versions 
 
-We support the following versions of the betweenness centrality algorithm:
-
-* [*] directed, unweighted
-
-* [ ] directed, weighted
+We support the following versions of the harmonic centrality algorithm:
 
 * [*] undirected, unweighted
 

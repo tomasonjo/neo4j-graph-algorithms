@@ -56,7 +56,9 @@ include::scripts/minimum-weight-spanning-tree.cypher[tag=create-sample-graph]
 
 ----
 
-.Running minimum algorithm and writing back results 
+Minimum weighted spanning tree visits all nodes that are in the same connected component as the starting node and returns a spanning tree of all nodes in the component where the total weight of the relationships is minimized.
+
+.Running minimum spanning tree algorithm and writing back results 
 [source,cypher]
 ----
 include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-minst-graph]
@@ -68,20 +70,29 @@ include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-minst-grap
 image::{img}/minst_result.png[]
 
 
-.Running maximum algorithm and writing back results 
+Maximum weighted tree spanning algorithm is similar to the mininum one, except that it returns a spanning tree of all nodes in the component where the total weight of the relationships is maximized.
+
+
+.Running maximum spanning tree algorithm and writing back results 
 [source,cypher]
 ----
 include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-maxst-graph]
 
 ----
 
-.Results
 
 image::{img}/maxst_result.png[]
 
 === k-Spanning tree
 
-.Running k-minimum algorithm and writing back results 
+Sometimes we want to limit the size of our spanning tree result as we are only interested in finding a smaller tree within our graph, that does not span across all nodes. 
+K-Spanning tree result is a tree with k nodes and k − 1 relationships.
+
+In our sample graph we have 5 nodes.
+When we ran MST before we got returned a 5-minimum spanning tree, that covered all the nodes.
+By setting the `k=3` we define that we want to get returned a 3-minimum spanning tree that covers 3 nodes and has 2 relationships.
+
+.Running k-minimum spanning tree algorithm and writing back results 
 [source,cypher]
 ----
 include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-kminst-graph]
@@ -89,9 +100,19 @@ include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-kminst-gra
 ----
 
 .Results
+[opts="header",cols="1,1"]
+|===
+| Place | partition 
+| A | 1
+| B | 1
+| C | 1
+| D | 3
+| E | 4 
+|===
 
+Nodes A, B and C are the result 3-minimum spanning tree of our graph.
 
-.Running k-maximum algorithm and writing back results 
+.Running k-maximum spanning tree algorithm and writing back results 
 [source,cypher]
 ----
 include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-kmaxst-graph]
@@ -99,6 +120,17 @@ include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-kmaxst-gra
 ----
 
 .Results
+[opts="header",cols="1,1"]
+|===
+| Place | partition 
+| A | 0
+| B | 1
+| C | 3
+| D | 3
+| E | 3 
+|===
+
+Nodes C, D and E are the result 3-maximum spanning tree of our graph.
 
 == Example Usage
 
@@ -193,7 +225,7 @@ ifdef::implementation[]
 :leveloffset: +1
 // copied from: https://github.com/neo4j-contrib/neo4j-graph-algorithms/issues/81
 
-A _Minimum Weight Spanning Tree_ is a acyclic undirected graph which consists of all connected nodes and whose relationship weights are minimal. It can be used to cluster the graph (KMeans). Our current approach uses _Prim's Algorithm_ to calculate the MST starting at a given node. This might not cover the whole graph. But if the nodes are connected the MST is always identical regardless at which node the execution starts.
+A _Minimum Weight Spanning Tree_ is a acyclic undirected graph which consists of all connected nodes and whose relationship weights are minimal. It can be used to cluster the graph (KMeans). Our current approach uses _Prim's Algorithm_ to calculate the MST starting at a given node. This might not cover the whole graph if the graph. But if the nodes are connected the MST is always identical regardless at which node the execution starts.
 
 ## Progress
 
