@@ -133,6 +133,18 @@ include::scripts/minimum-weight-spanning-tree.cypher[tag=write-sample-kmaxst-gra
 
 Nodes C, D and E are the result 3-maximum spanning tree of our graph.
 
+
+When we run this algorithm on a bigger graph we can use the following query to find nodes that belong to our k-spanning tree result. 
+
+.Find nodes that belong to our k-spanning tree result.
+[source,cypher]
+----
+MATCH (n:Place)
+WITH n.partition as partition, count(*) as count 
+WHERE count = k
+RETURN n 
+----
+
 == Example Usage
 
 == Syntax
