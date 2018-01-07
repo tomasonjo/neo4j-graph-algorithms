@@ -226,7 +226,7 @@ ifdef::implementation[]
 :leveloffset: +1
 // copied from: https://github.com/neo4j-contrib/neo4j-graph-algorithms/issues/81
 
-A _Minimum Weight Spanning Tree_ is a acyclic undirected graph which consists of all connected nodes and whose relationship weights are minimal. It can be used to cluster the graph (KMeans). Our current approach uses _Prim's Algorithm_ to calculate the MST starting at a given node. This might not cover the whole graph if the graph. But if the nodes are connected the MST is always identical regardless at which node the execution starts.
+A _Minimum Weight Spanning Tree_ is a acyclic undirected graph which consists of all connected nodes and whose relationship weights are minimal. It can be used to cluster the graph (KMeans). Our current approach uses _Prim's Algorithm_ to calculate the MST starting at a given node. This might not cover the whole graph. But if the nodes are connected the MST is always identical regardless at which node the execution starts.
 
 ## Progress
 
