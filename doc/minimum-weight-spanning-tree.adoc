@@ -10,7 +10,8 @@ also available is the maximumSpanningTree `algo.spanningTree.maximum`
 
 A _Minimum Weight Spanning Tree_ (MST) is a subset of the relationships of a connected, weighted undirected graph that connects all the nodes together, without any cycles and with the minimum possible total edge weight.
 That is, it is a spanning tree whose sum of relationship weights is as small as possible.
-Our current approach uses _Prim's Algorithm_ to calculate the MST starting at a given node. 
+Our current approach uses _Prim's Algorithm_ to calculate the MST starting at a given node.
+It can be used to cluster the graph (KMeans). 
 
 == History, Explanation
 
@@ -85,11 +86,11 @@ image::{img}/maxst_result.png[]
 
 === k-Spanning tree
 
-Sometimes we want to limit the size of our spanning tree result as we are only interested in finding a smaller tree within our graph, that does not span across all nodes. 
-K-Spanning tree result is a tree with k nodes and k − 1 relationships.
+Sometimes we want to limit the size of our spanning tree result as we are only interested in finding a smaller tree within our graph that does not span across all nodes. 
+K-Spanning tree algorithm returns a tree with k nodes and k − 1 relationships.
 
 In our sample graph we have 5 nodes.
-When we ran MST before we got returned a 5-minimum spanning tree, that covered all the nodes.
+When we ran MST above we got returned a 5-minimum spanning tree, that covered all five nodes.
 By setting the `k=3` we define that we want to get returned a 3-minimum spanning tree that covers 3 nodes and has 2 relationships.
 
 .Running k-minimum spanning tree algorithm and writing back results 
