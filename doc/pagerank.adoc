@@ -209,7 +209,9 @@ We support the following versions of the pageRank algorithm:
 * [ ] directed, weighted
 
 * [x] undirected, unweighted
-** Using cypher projections
+
+** Only with cypher projection
+
 * [ ] undirected, weighted
 
 == References

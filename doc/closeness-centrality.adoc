@@ -171,7 +171,9 @@ We support the following versions of the closeness centrality algorithm:
 * [ ] directed, weighted
 
 * [x] undirected, unweighted
-** Using cypher projections
+
+** Only with cypher projection
+
 * [ ] undirected, weighted  
 
 

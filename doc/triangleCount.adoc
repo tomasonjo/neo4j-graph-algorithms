@@ -180,10 +180,7 @@ Set `graph:'cypher'` in the config.
 
 [source,cypher]
 ----
-CALL algo.triangleCount('MATCH (p:Person) RETURN id(p) as id',
-  'MATCH (p1:Person)-[:KNOWS]->(p2:Person) RETURN id(p1) as source,id(p2) as target',
-  {concurrency:4, write:true, writeProperty:'triangle',graph:'cypher', clusteringCoefficientProperty:'coefficient'}) 
-yield loadMillis, computeMillis, writeMillis, nodeCount, triangleCount, averageClusteringCoefficient
+include::scripts/triangle-count.cypher[tag=cypher-loading]
 ----
 == Versions 
 

@@ -114,7 +114,7 @@ We builded a separate engine to enable running parallel graph algorithms.
 
 === Label and relationship-type projection
 
-We can describe the subset of your graph you want to project using label for nodes and relationship-type for relationships.
+We can project the subgraph we want to run the algorithm on using label parameter to describe nodes and relationship-type to describe relationships.
 
 The general call syntax is:
 
@@ -139,10 +139,10 @@ ORDER BY score DESC LIMIT 10;
 
 === Cypher projection
 
-If label and relationship-type are not selective enough to describe our subgraph to run the algorithm on, we can use Cypher statements to project subsets of your graph.
+If label and relationship-type projection is not selective enough to describe our subgraph to run the algorithm on, we can use Cypher statements to project subsets of our graph.
 Use a node-statement instead of the label parameter and a relationship-statement instead of the relationship-type and use `graph:'cypher'` in the config.
 
-We can also return a property value or weight (according to your config) in addition to the id's from these statements.
+We can also return a property value or weight (according to our config) in addition to the id's from these statements.
 
 [source,cypher]
 ----
@@ -152,8 +152,8 @@ CALL algo.pageRank(
 {graph:'cypher', iterations:5, write: true});
 ----
 
-With cypher projection we can also project a virtual (non-stored) graph. 
-Example how to project a stored bi-partite graph to a virtual projected mono-partite graph. 
+Cypher projection can also be used to project a virtual (non-stored) graph. 
+Here is an example how to project a stored bi-partite graph to a virtual mono-partite graph. 
 
 
 [source,cypher]
