@@ -98,6 +98,21 @@ For most algorithms we provide two procedures:
 
 For large graphs the streaming procedure might return millions or billions of results, that's why it is often more convenient to store the results of the algorithm and then use them with later queries.
 
+=== Graph projection
+
+
+[ditaa]
+----
++----------+label/rel type projection +-----------+
+|  Neo4j   +------------------------->| Projected |  Execute algorithm
+| stored   |    cypher projection     |   graph   |<-------------------
+|  graph   +------------------------->|           |
++----------+                          +-----------+
+       
+----
+
+=== Label and rel type loading
+
 The general call syntax is:
 
 [source,cypher]
