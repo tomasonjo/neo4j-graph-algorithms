@@ -190,7 +190,7 @@ YIELD node, score - calculates page rank and streams results
 |===
 
 
-== Cypher loading
+== Cypher projection
 
 If label and relationship-type are not selective enough to describe a subgraph to run the algorithm on, you can use Cypher statements to load or project subsets of your graph.
 Don't forget to set `graph:'cypher'` in the config.
@@ -208,8 +208,8 @@ We support the following versions of the pageRank algorithm:
 
 * [ ] directed, weighted
 
-* [ ] undirected, unweighted
-
+* [x] undirected, unweighted
+** Using cypher projections
 * [ ] undirected, weighted
 
 == References
