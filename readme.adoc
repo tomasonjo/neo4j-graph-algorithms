@@ -98,8 +98,7 @@ For most algorithms we provide two procedures:
 
 For large graphs the streaming procedure might return millions or billions of results, that's why it is often more convenient to store the results of the algorithm and then use them with later queries.
 
-
-We builded a separate engine to enable running parallel graph algorithms. 
+We can project the graph we want to run algorithms on with either label and relationship-type projection or cypher projection.
 
 
 [ditaa]
@@ -111,6 +110,12 @@ We builded a separate engine to enable running parallel graph algorithms.
 +----------+                          +-----------+
        
 ----
+
+Projected graph model is separate from Neo4j's stored graph model to allow fast cache for the topology of the graph containing only relevant nodes, relations and in addition the weights.
+For now the projected graph model does not support multiple relationships between a single pair of nodes.
+During projection we allow only one relationship between a pair of nodes per direction (in, out) in the directed case but two relationships for BOTH the undirected case.
+
+
 
 === Label and relationship-type projection
 
@@ -143,6 +148,8 @@ If label and relationship-type projection is not selective enough to describe ou
 Use a node-statement instead of the label parameter and a relationship-statement instead of the relationship-type and use `graph:'cypher'` in the config.
 
 We can also return a property value or weight (according to our config) in addition to the id's from these statements.
+
+Cypher projection allows us to be more expressive in describing our subgraph we want to analyse, but might take longer to project the graph with more complex cypher queries. 
 
 [source,cypher]
 ----
