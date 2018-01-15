@@ -147,21 +147,24 @@ ORDER BY score DESC LIMIT 10;
 If label and relationship-type projection is not selective enough to describe our subgraph to run the algorithm on, we can use Cypher statements to project subsets of our graph.
 Use a node-statement instead of the label parameter and a relationship-statement instead of the relationship-type and use `graph:'cypher'` in the config.
 
+Relationships described in the relationship-statement will only be projected if both source and target nodes are described in the node-statement.
+All other relationships that don't have both source and target nodes described in node-statement will be ignored in projection.
+
 We can also return a property value or weight (according to our config) in addition to the id's from these statements.
 
 Cypher projection allows us to be more expressive in describing our subgraph we want to analyse, but might take longer to project the graph with more complex cypher queries. 
+
 
 [source,cypher]
 ----
 CALL algo.pageRank(
 'MATCH (p:Page) RETURN id(p) as id',
-'MATCH (p1:Page)-[:Link]->(p2:Page) RETURN id(p1) as source, id(p2) as target, count(*) as weight',
+'MATCH (p1:Page)-[:Link]->(p2:Page) RETURN id(p1) as source, id(p2) as target',
 {graph:'cypher', iterations:5, write: true});
 ----
 
 Cypher projection can also be used to project a virtual (non-stored) graph. 
-Here is an example how to project a stored bi-partite graph to a virtual mono-partite graph. 
-
+Here is an example of how to project an undirected graph of people who visited the same web page and run Louvain community detection algorithm on it using the number of common visited web pages between pairs of people as relationship weight.
 
 [source,cypher]
 ----
