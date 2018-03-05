@@ -157,7 +157,7 @@ partitionProperty - simple label propagation kernel
 | write | boolean | true | yes | if result was written back as node property
 |===
 
-.running algorithm and streaming results
+.Running algorithm and streaming results
 [source,cypher]
 ----
 CALL algo.labelPropagation.stream(label:String, relationship:String, {iterations:1,
