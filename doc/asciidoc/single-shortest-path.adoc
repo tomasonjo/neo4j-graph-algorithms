@@ -99,16 +99,6 @@ include::scripts/single-shortest-path.cypher[tag=delta-write-sample-graph]
 
 == Example Usage
 
-.Running algorithm and writing back results 
-[source,cypher]
-----
-MATCH (first:Compound {name:"RA14082836"}),(second:Compound {name:"RA13965160"})
-CALL algo.shortestPath.stream(first, second, 'weight', { graph:'cypher',
-nodeQuery:'MATCH(n:Compound) WHERE n.cMolecular_Weight >= 200 RETURN id(n) as id',
-relationshipQuery:'MATCH(n:Compound)-[:Similarity]->(m:Compound) RETURN id(n) as source, id(m) as target, (n.cMolecular_Weight + m.cMolecular_Weight) / 2 as weight'
-}) yield nodeId, cost
-return nodeId, cost limit 10
-----
 
 == Syntax
 
