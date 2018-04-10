@@ -99,6 +99,17 @@ include::scripts/single-shortest-path.cypher[tag=delta-write-sample-graph]
 
 == Example Usage
 
+.Running algorithm and writing back results 
+[source,cypher]
+----
+MATCH (first:Compound {name:"RA14082836"}),(second:Compound {name:"RA13965160"})
+CALL algo.shortestPath.stream(first, second, 'weight', { graph:'cypher',
+nodeQuery:'MATCH(n:Compound) WHERE n.cMolecular_Weight >= 200 RETURN id(n) as id',
+relationshipQuery:'MATCH(n:Compound)-[:Similarity]->(m:Compound) RETURN id(n) as source, id(m) as target, (n.cMolecular_Weight + m.cMolecular_Weight) / 2 as weight'
+}) yield nodeId, cost
+return nodeId, cost limit 10
+----
+
 == Syntax
 
 .Running algorithm and writing back results
@@ -185,6 +196,18 @@ We support the following versions of the shortest path algorithms:
 * [x] undirected, weighted 
 
 ** direction: 'BOTH', weightProperty: 'cost'
+
+== Cypher projection
+
+If label and relationship-type are not selective enough to describe your subgraph to run the algorithm on, you can use Cypher statements to load or project subsets of your graph.
+Can be also used to run algorithms on a virtual graph.
+Set `graph:'cypher'` in the config.
+
+[source,cypher]
+----
+include::scripts/single-shortest-path.cypher[tag=cypher-loading]
+----
+
 
 == Implementations
 
