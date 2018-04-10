@@ -198,7 +198,6 @@ Set `graph:'cypher'` in the config.
 include::scripts/single-shortest-path.cypher[tag=cypher-loading]
 ----
 
-
 == Implementations
 
 `algo.shortestPath`
