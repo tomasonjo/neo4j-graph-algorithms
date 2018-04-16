@@ -103,7 +103,7 @@ public final class LabelPropagationProc {
 
     @Procedure(value = "algo.labelPropagation.stream")
     @Description("CALL algo.labelPropagation.stream(label:String, relationship:String, " +
-                "{direction:String, iterations:1, weightProperty:'weight', partitionProperty:'partition', write:true, concurrency:4}) " +
+                "{direction:String, iterations:1, weightProperty:'weight', partitionProperty:'partition', concurrency:4}) " +
                  "YIELD nodeId, label")
     public Stream<LabelPropagation.StreamResult> labelPropagationStream(
             @Name(value = "label", defaultValue = "") String label,
