@@ -24,6 +24,8 @@ MERGE (nCharles)-[:FOLLOW]->(nDoug);
 
 CALL algo.labelPropagation.stream("User", "FOLLOW",
   {direction: "OUTGOING", iterations: 10})
+YIELD nodeId,label
+RETURN nodeId,label LIMIT 20
 
 // end::stream-sample-graph[]
 
