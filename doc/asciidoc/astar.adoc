@@ -16,6 +16,8 @@ A* algorithm was first described in 1968 by Peter Hart, Nils Nilsson and Bertram
 In A* we split the path cost into two parts: g(n), which is the cost of the path from the starting point to some node n; and h(n), which represents the estimated  cost  of the path from the node n to the destination node, as computed by a heuristic (an intelligent guess).
 The A* algorithm balances g(n) and h(n) as it iterates the graph, thereby ensuring that at each iteration it chooses the node with the lowest overall cost f(n) = g(n) + h(n).
 
+Heuristic function is for geospatial distances.
+
 // end::explanation[]
 
 == When to use it / use-cases
@@ -26,6 +28,9 @@ The A* algorithm balances g(n) and h(n) as it iterates the graph, thereby ensuri
 == Constraints / when not to use it
 
 // tag::constraint[]
+
+You will need geospatial locations
+Apoc spatial comes to mind https://neo4j-contrib.github.io/neo4j-apoc-procedures/#_spatial_2
 // end::constraint[]
 
 == Algorithm explanation on simple sample graph
@@ -57,8 +62,6 @@ include::scripts/astar.cypher[tag=stream-sample-graph]
 // end::stream-sample-graph-result[]
 
 // tag::stream-sample-graph-explanation[]
-We can see that Alice is the main broker in this network and Charles is a minor broker.
-The others don't have any influence because all the shortest paths between pairs of people go via Alice or Charles.
 // end::stream-sample-graph-explanation[]
 
 == Syntax
@@ -107,7 +110,7 @@ include::scripts/astar.cypher[tag=cypher-loading]
 
 == Versions 
 
-We support the following versions of the betweenness centrality algorithm:
+We support the following versions of the A* algorithm:
 
 * [x] directed, unweighted
 
@@ -160,11 +163,7 @@ ifdef::implementation[]
 
 === algo.shortestPath.astar.stream()
 
-- implementation of brandes-bc algorithm and nodePartitioning extension
-- http://www.algo.uni-konstanz.de/publications/b-fabc-01.pdf
-- if `concurrency` parameter is set (and >1) ParallelBetweennessCentrality is used
-- ParallelBC spawns N(given by the concurrency param) concurrent threads for calculation where each one
- calculates the BC for one node at a time
+- implementation of Heuristic function is for geospatial distances.
 
 // end::implementation[]
 endif::implementation[]
