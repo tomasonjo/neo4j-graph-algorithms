@@ -16,21 +16,22 @@ A* algorithm was first described in 1968 by Peter Hart, Nils Nilsson and Bertram
 In A* we split the path cost into two parts: g(n), which is the cost of the path from the starting point to some node n; and h(n), which represents the estimated  cost  of the path from the node n to the destination node, as computed by a heuristic (an intelligent guess).
 The A* algorithm balances g(n) and h(n) as it iterates the graph, thereby ensuring that at each iteration it chooses the node with the lowest overall cost f(n) = g(n) + h(n).
 
-Heuristic function is for geospatial distances.
+In our implementation geospatial distance is used as heurestic.
 
 // end::explanation[]
 
 == When to use it / use-cases
 
 // tag::use-case[]
+
+* A* algorithm can be used to find shortest paths between single pairs of locations where GPS coordinates are known.
+
 // end::use-case[]
 
 == Constraints / when not to use it
 
 // tag::constraint[]
 
-You will need geospatial locations
-Apoc spatial comes to mind https://neo4j-contrib.github.io/neo4j-apoc-procedures/#_spatial_2
 // end::constraint[]
 
 == Algorithm explanation on simple sample graph
@@ -51,26 +52,21 @@ include::scripts/astar.cypher[tag=stream-sample-graph]
 .Results
 [opts="header",cols="1,1"]
 |===
-| name | centrality weight 
-| Alice | 4
-| Charles | 2
-| Bridget | 0
-| Michael | 0
-| Doug | 0
-| Mark | 0 
+| name | cost
+| King's Cross St. Pancras | 0
+| Euston | 2
+| Camden Town | 5
+| Kentish Town | 7 
 |===
 // end::stream-sample-graph-result[]
-
-// tag::stream-sample-graph-explanation[]
-// end::stream-sample-graph-explanation[]
 
 == Syntax
 
 .Running algorithm and streaming results
 [source,cypher]
 ----
-CALL algo.shortestPath.astar.stream((startNode:Node, endNode:Node, propertyKeyLat:String, propertyKeyLon:String,
-weightProperty:String {nodeQuery:'labelName', relationshipQuery:'relationshipName', direction:'BOTH', defaultValue:1.0})
+CALL algo.shortestPath.astar.stream((startNode:Node, endNode:Node, weightProperty:String, propertyKeyLat:String, 
+propertyKeyLon:String, {nodeQuery:'labelName', relationshipQuery:'relationshipName', direction:'BOTH', defaultValue:1.0})
 YIELD nodeId, cost - yields a stream of {nodeId, cost} from start to end (inclusive)
 ----
 
@@ -80,9 +76,9 @@ YIELD nodeId, cost - yields a stream of {nodeId, cost} from start to end (inclus
 | name | type | default | optional | description
 | startNode  | node | null | no | start node
 | endNode | node | null | no | end node
-| propertyKeyLat | string | null | no | property name that contains weight
-| propertyKeyLon | string | null | no | property name that contains weight
 | weightProperty | string | null | yes | property name that contains weight
+| propertyKeyLat | string | null | no | property name that contains latitude coordinate
+| propertyKeyLon | string | null | no | property name that contains longitude coordinate
 | nodeQuery | string | null | yes | label to load from the graph, if null load all nodes
 | relationshipQuery | string | null | yes | relationship-type to load from the graph, if null load all nodes
 | defaultValue | float | null | yes | default value of the weight in case it is missing or invalid
@@ -110,26 +106,29 @@ include::scripts/astar.cypher[tag=cypher-loading]
 
 == Versions 
 
-We support the following versions of the A* algorithm:
+We support the following versions of the shortest path algorithms:
 
-* [x] directed, unweighted
+* [x] directed, unweighted:  
 
-** loading incoming relationships: 'INCOMING','IN','I' or '<'
-** loading outgoing relationships: 'OUTGOING','OUT','O' or '>'
+** direction: 'OUTGOING' or INCOMING, weightProperty: null
 
-* [ ] directed, weighted
+* [x] directed, weighted 
+
+** direction: 'OUTGOING' or INCOMING, weightProperty: 'cost'
 
 * [x] undirected, unweighted
 
-** direction:'both' or '<>'
+** direction: 'BOTH', weightProperty: null
 
-* [ ] undirected, weighted 
+* [x] undirected, weighted 
+
+** direction: 'BOTH', weightProperty: 'cost'
 
 == Implementations
 
 `algo.shortestPath.astar.stream()`
 
-- implementation of brandes-bc algorithm and nodePartitioning extension
+- implementation of A* heuristic function is for geospatial distances.
 
 == References
 
@@ -156,14 +155,14 @@ ifdef::implementation[]
 - [] benchmark on bigger graphs
 - [] parallelization
 - [] evaluation
-- [x] documentation
+- [] documentation
 
 
 == Details
 
 === algo.shortestPath.astar.stream()
 
-- implementation of Heuristic function is for geospatial distances.
+- implementation of A* heuristic function is for geospatial distances.
 
 // end::implementation[]
 endif::implementation[]
