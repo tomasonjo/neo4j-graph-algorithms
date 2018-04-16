@@ -102,7 +102,7 @@ public class LabelPropagationProcIntegrationTest {
 
     @Test
     public void shouldTakeParametersFromConfig() {
-        String query = "CALL algo.labelPropagation(null, null, null, {iterations:5,write:false,weightProperty:'score',partitionProperty:'key'})";
+        String query = "CALL algo.labelPropagation(null, null, {iterations:5,write:false,weightProperty:'score',partitionProperty:'key'})";
 
         runQuery(query, row -> {
             assertTrue(5 >= row.getNumber("iterations").intValue());
@@ -115,7 +115,7 @@ public class LabelPropagationProcIntegrationTest {
 
     @Test
     public void shouldRunLabelPropagation() {
-        String query = "CALL algo.labelPropagation(null, 'X', 'OUTGOING', {batchSize:$batchSize,concurrency:$concurrency})";
+        String query = "CALL algo.labelPropagation(null, 'X', {batchSize:$batchSize,concurrency:$concurrency,direction: 'OUTGOING'})";
         String check = "MATCH (n) WHERE n.id IN [0,1] RETURN n.partition AS partition";
 
         runQuery(query, parParams(), row -> {
@@ -138,7 +138,7 @@ public class LabelPropagationProcIntegrationTest {
 
     @Test
     public void shouldFallbackToNodeIdsForNonExistingPartitionKey() {
-        String query = "CALL algo.labelPropagation(null, 'X', 'OUTGOING', {partitionProperty:'foobar',batchSize:$batchSize,concurrency:$concurrency})";
+        String query = "CALL algo.labelPropagation(null, 'X', {partitionProperty:'foobar',batchSize:$batchSize,concurrency:$concurrency,direction:'OUTGOING'})";
         String checkA = "MATCH (n) WHERE n.id = 0 RETURN n.foobar as partition";
         String checkB = "MATCH (n) WHERE n.id = 1 RETURN n.foobar as partition";
 
@@ -152,7 +152,7 @@ public class LabelPropagationProcIntegrationTest {
 
     @Test
     public void shouldFilterByLabel() {
-        String query = "CALL algo.labelPropagation('A', 'X', 'OUTGOING', {batchSize:$batchSize,concurrency:$concurrency})";
+        String query = "CALL algo.labelPropagation('A', 'X', {batchSize:$batchSize,concurrency:$concurrency,direction:'OUTGOING'})";
         String checkA = "MATCH (n) WHERE n.id = 0 RETURN n.partition as partition";
         String checkB = "MATCH (n) WHERE n.id = 1 RETURN n.partition as partition";
 
@@ -165,7 +165,7 @@ public class LabelPropagationProcIntegrationTest {
 
     @Test
     public void shouldPropagateIncoming() {
-        String query = "CALL algo.labelPropagation('A', 'X', 'INCOMING', {batchSize:$batchSize,concurrency:$concurrency})";
+        String query = "CALL algo.labelPropagation('A', 'X', {batchSize:$batchSize,concurrency:$concurrency,direction:'INCOMING'})";
         String check = "MATCH (n:A) WHERE n.id <> 0 RETURN n.partition as partition";
 
         runQuery(query, parParams());
@@ -175,19 +175,19 @@ public class LabelPropagationProcIntegrationTest {
 
     @Test
     public void shouldAllowHeavyGraph() {
-        String query = "CALL algo.labelPropagation(null, 'X', 'OUTGOING', {graph:'heavy',batchSize:$batchSize,concurrency:$concurrency})";
+        String query = "CALL algo.labelPropagation(null, 'X', {graph:'heavy',batchSize:$batchSize,concurrency:$concurrency,direction:'OUTGOING'})";
         runQuery(query, parParams(), row -> assertEquals(12, row.getNumber("nodes").intValue()));
     }
 
     @Test
     public void shouldAllowCypherGraph() {
-        String query = "CALL algo.labelPropagation('MATCH (n) RETURN id(n) as id, n.weight as weight, n.partition as value', 'MATCH (s)-[r:X]->(t) RETURN id(s) as source, id(t) as target, r.weight as weight', 'OUTGOING', {graph:'cypher',batchSize:$batchSize,concurrency:$concurrency})";
+        String query = "CALL algo.labelPropagation('MATCH (n) RETURN id(n) as id, n.weight as weight, n.partition as value', 'MATCH (s)-[r:X]->(t) RETURN id(s) as source, id(t) as target, r.weight as weight', {graph:'cypher',batchSize:$batchSize,concurrency:$concurrency})";
         runQuery(query, parParams(), row -> assertEquals(12, row.getNumber("nodes").intValue()));
     }
 
     @Test
     public void shouldNotAllowLightOrHugeOrKernelGraph() throws Throwable {
-        String query = "CALL algo.labelPropagation(null, null, null, {graph:$graph})";
+        String query = "CALL algo.labelPropagation(null, null, {graph:$graph})";
         Map<String, Object> params = parParams();
 
         exceptions.expect(IllegalArgumentException.class);
@@ -208,7 +208,7 @@ public class LabelPropagationProcIntegrationTest {
         // this one deliberately tests the streaming and non streaming versions against each other to check we get the same results
         // we intentionally start with no labels defined for any nodes (hence partitionProperty = {lpa, lpa2})
 
-        runQuery("CALL algo.labelPropagation(null, null, 'OUTGOING', {iterations: 20, partitionProperty: 'lpa'})", row -> {});
+        runQuery("CALL algo.labelPropagation(null, null, {iterations: 20, partitionProperty: 'lpa', direction:'OUTGOING'})", row -> {});
 
         String query = "CALL algo.labelPropagation.stream(null, null, {iterations: 20, direction: 'OUTGOING', partitionProperty: 'lpa2'}) " +
                 "YIELD nodeId, label " +

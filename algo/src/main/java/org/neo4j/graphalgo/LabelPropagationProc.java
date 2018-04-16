@@ -66,23 +66,20 @@ public final class LabelPropagationProc {
 
     @Procedure(name = "algo.labelPropagation", mode = Mode.WRITE)
     @Description("CALL algo.labelPropagation(" +
-            "label:String, relationship:String, direction:String, " +
-            "{iterations:1, weightProperty:'weight', partitionProperty:'partition', write:true, concurrency:4}) " +
+            "label:String, relationship:String, " +
+            "{direction:String, iterations:1, weightProperty:'weight', partitionProperty:'partition', write:true, concurrency:4}) " +
             "YIELD nodes, iterations, didConverge, loadMillis, computeMillis, writeMillis, write, weightProperty, partitionProperty - " +
             "simple label propagation kernel")
     public Stream<LabelPropagationStats> labelPropagation(
             @Name(value = "label", defaultValue = "") String label,
             @Name(value = "relationship", defaultValue = "") String relationshipType,
-            @Name(value = "direction", defaultValue = "OUTGOING") String directionName,
             @Name(value = "config", defaultValue = "{}") Map<String, Object> config) {
 
         final ProcedureConfiguration configuration = ProcedureConfiguration.create(config)
                 .overrideNodeLabelOrQuery(label)
-                .overrideRelationshipTypeOrQuery(relationshipType)
-                .overrideDirection(directionName);
+                .overrideRelationshipTypeOrQuery(relationshipType);
 
         final Direction direction = configuration.getDirection(Direction.OUTGOING);
-
         final int iterations = configuration.getIterations(DEFAULT_ITERATIONS);
         final int batchSize = configuration.getBatchSize();
         final int concurrency = configuration.getConcurrency();
@@ -105,8 +102,9 @@ public final class LabelPropagationProc {
     }
 
     @Procedure(value = "algo.labelPropagation.stream")
-    @Description("CALL algo.labelPropagation.stream(label:String, relationship:String, config:Map<String, Object>) YIELD " +
-            "nodeId, label")
+    @Description("CALL algo.labelPropagation.stream(label:String, relationship:String, " +
+                "{direction:String, iterations:1, weightProperty:'weight', partitionProperty:'partition', write:true, concurrency:4}) " +
+                 "YIELD nodeId, label")
     public Stream<LabelPropagation.StreamResult> labelPropagationStream(
             @Name(value = "label", defaultValue = "") String label,
             @Name(value = "relationship", defaultValue = "") String relationship,

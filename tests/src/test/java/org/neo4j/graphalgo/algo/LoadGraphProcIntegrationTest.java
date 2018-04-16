@@ -139,7 +139,7 @@ public class LoadGraphProcIntegrationTest {
     public void shouldWorkWithLimitedTypes() {
         db.execute("CALL algo.graph.load('foo',null,null,{graph:$graph})", singletonMap("graph",graph)).close();
 
-        String query = "CALL algo.labelPropagation(null,null,null,{graph:$name,write:false})";
+        String query = "CALL algo.labelPropagation(null,null,{graph:$name,write:false})";
         try {
             runQuery(query, singletonMap("name", "foo"), row -> {
                 assertEquals(HeavyGraph.TYPE, graph);
