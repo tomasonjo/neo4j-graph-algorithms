@@ -34,16 +34,20 @@ all the text
 [[algorithms-balanced-triads-sample]]
 == Balanced Triads algorithm sample
 
+This sample will explain the Balanced Triads algorithm, using a simple graph:
+
+image::balanced_triads.png[]
+
 .The following will create a sample graph:
 [source, cypher]
 ----
-include::scripts/triangle-count.cypher[tag=create-sample-graph]
+include::scripts/balanced-triads.cypher[tag=create-sample-graph]
 ----
 
 .The following will return a stream of triples, with `nodeId` for each triangle:
 [source, cypher]
 ----
-include::scripts/triangle-count.cypher[tag=stream-triples]
+include::scripts/balanced-triads.cypher[tag=stream-sample-graph]
 ----
 
 // tag::stream-triples-result[]
@@ -57,24 +61,18 @@ include::scripts/triangle-count.cypher[tag=stream-triples]
 |===
 // end::stream-triples-result[]
 
-// tag::stream-triples-explanation[]
+// tag::stream-graph-explanation[]
 We can see that there are `KNOWS` triangles containing "Will, Michael, and Chris", "Will, Mark, and Michael", and "Michael, Karin, and Chris".
 This means that everybody in the triangle knows each other.
-// end::stream-triples-explanation[]
+// end::stream-graph-explanation[]
 
 .The following will count the number of triangles that a node is member of, and write it back. It will return the total triangle count and average clustering coefficient of the given graph:
 [source, cypher]
 ----
-include::scripts/triangle-count.cypher[tag=triangle-write-sample-graph]
+include::scripts/balanced-triads.cypher[tag=write-sample-graph]
 ----
 
-.The following will count the number of triangles that a node is member of, and return a stream with `nodeId` and `triangleCount`:
-[source, cypher]
-----
-include::scripts/triangle-count.cypher[tag=triangle-stream-sample-graph]
-----
-
-// tag::triangle-stream-sample-graph-result[]
+// tag::write-sample-graph-result[]
 .Results
 [opts="header",cols="1,1,1"]
 |===
@@ -86,11 +84,11 @@ include::scripts/triangle-count.cypher[tag=triangle-stream-sample-graph]
 | Michael | 3         | 0.3
 | Alice   | 0         | 0
 |===
-// end::triangle-stream-sample-graph-result[]
+// end::write-sample-graph-result[]
 
-// tag::triangle-stream-sample-graph-explanation[]
+// tag::write-sample-graph-explanation[]
 We learn that Michael is part of the most triangles, but it's Karin and Mark who are the best at introducing their friends - all of the people who know them, know each other!
-// end::triangle-stream-sample-graph-explanation[]
+// end::write-sample-graph-explanation[]
 
 
 [[algorithms-balanced-triads-example]]
@@ -116,36 +114,11 @@ Local triangle count and clustering coefficient of nodes can be used as features
 [[algorithms-balanced-triads-syntax]]
 == Syntax
 
-.The following will return a stream of triples with `nodeId` for each triangle:
-[source, cypher]
-----
-CALL algo.triangle.stream(label:String, relationship:String, {concurrency:4})
-YIELD nodeA, nodeB, nodeC
-----
-
-.Parameters
-[opts="header",cols="1,1,1,1,4"]
-|===
-| Name         | Type   | Default        | Optional | Description
-| label        | string | null           | yes      | The label to load from the graph. If null, load all nodes
-| relationship | string | null           | yes      | The relationship-type to load from the graph. If null, load all nodes
-| concurrency  | int    | available CPUs | yes      | The number of concurrent threads
-|===
-
-.Results
-[opts="header",cols="1,1,6"]
-|===
-| Name  | Type | Description
-| nodeA | int  | The ID of node in the given triangle
-| nodeB | int  | The ID of node in the given triangle
-| nodeC | int  | The ID of node in the given triangle
-|===
-
 .The following will count the number of triangles that a node is a member of, and return a stream with `nodeId` and `triangleCount`:
 [source, cypher]
 ----
-CALL algo.triangleCount.stream(label:String, relationship:String, {concurrency:4})
-YIELD nodeId, triangles
+CALL algo.balancedTriads.stream(label:String, relationship:String, {concurrency:4})
+YIELD nodeId, balanced, unbalanced
 ----
 
 .Parameters
@@ -154,6 +127,7 @@ YIELD nodeId, triangles
 | Name         | Type   | Default        | Optional | Description
 | label        | string | null           | yes      | The label to load from the graph. If null, load all nodes
 | relationship | string | null           | yes      | The relationship-type to load from the graph. If null, load all relationships
+| weightProperty | string  | null           | no      | The property name that contains weight. If null, treats the graph as unweighted. Must be numeric.
 | concurrency  | int    | available CPUs | yes      | The number of concurrent threads
 |===
 
@@ -162,15 +136,16 @@ YIELD nodeId, triangles
 |===
 | Name      | Type | Description
 | nodeId    | int  | The ID of node
-| triangles | int  | The number of triangles a node is member of
+| balanced | int  | The number of triangles a node is member of
+| unbalanced | int  | The number of triangles a node is member of
 |===
 
 .The following will count the number of triangles that a node is a member of, and write it back. It will return the total triangle count and average clustering coefficient of the given graph:
 [source, cypher]
 ----
-CALL algo.triangleCount(label:String, relationship:String,
-    {concurrency:4, write:true, writeProperty:'triangles', clusteringCoefficientProperty:'coefficient'})
-YIELD loadMillis, computeMillis, writeMillis, nodeCount, triangleCount, averageClusteringCoefficient
+CALL algo.balancedTriads(label:String, relationship:String,
+  {concurrency:4, write:true, weightProperty:'weight', balancedProperty:'balanced', unbalancedProperty:'unbalanced'})
+YIELD loadMillis, computeMillis, writeMillis, nodeCount, balancedTriadCount, unbalancedTriadCount
 ----
 
 .Parameters
@@ -180,9 +155,11 @@ YIELD loadMillis, computeMillis, writeMillis, nodeCount, triangleCount, averageC
 | label                         | string  | null           | yes      | The label to load from the graph. If null, load all nodes
 | relationship                  | string  | null           | yes      | The relationship-type to load from the graph. If null, load all relationships
 | concurrency                   | int     | available CPUs | yes      | The number of concurrent threads
+| weightProperty                | string  | null           | no       | The property name that contains weight. If null, treats the graph as unweighted. Must be numeric.
+| balancedProperty | string  | 'balanced'   | yes      | The property name written back to
+| unbalancedProperty | string  | 'unbalanced'   | yes      | The property name written back to
 | write                         | boolean | true           | yes      | Specifies if the result should be written back as a node property
-| writeProperty                 | string  | 'triangles'    | yes      | The property name the number of triangles a node is member of is written to
-| clusteringCoefficientProperty | string  | 'coefficient'  | yes      | The property name clustering coefficient of the node is written to
+
 |===
 
 .Results
@@ -193,29 +170,16 @@ YIELD loadMillis, computeMillis, writeMillis, nodeCount, triangleCount, averageC
 | loadMillis                   | int   | Milliseconds for loading data
 | evalMillis                   | int   | Milliseconds for running the algorithm
 | writeMillis                  | int   | Milliseconds for writing result data back
-| triangleCount                | int   | The number of triangles in the given graph
-| averageClusteringCoefficient | float | The average clustering coefficient of the given graph
+| balancedTriadCount           | int   | The number of triangles in the given graph
+| unbalancedTriadCount         | int   | The average clustering coefficient of the given graph
 |===
-
-
-== Cypher projection
-
-If label and relationship-type are not selective enough to describe your subgraph to run the algorithm on, you can use Cypher statements to load or project subsets of your graph.
-This can also be used to run algorithms on a virtual graph.
-
-.Set `graph:'cypher'` in the config:
-
-[source, cypher]
-----
-include::scripts/triangle-count.cypher[tag=cypher-loading]
-----
 
 
 == Graph type support
 
-The Triangle Count algorithms support the following graph type:
+The Balanced Triads algorithm support the following graph type:
 
-* [x] undirected, unweighted
+* [x] undirected, weighted
 
 
 ifndef::env-docs[]
