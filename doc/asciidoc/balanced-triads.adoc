@@ -8,6 +8,9 @@ This section describes the Balanced Triads algorithm in the Neo4j Graph Algorith
 
 // tag::introduction[]
 <intro text>
+http://www.bertramgawronski.com/documents/G2007EncycBT.pdf
+
+https://www2.bc.edu/arch-woodside/sep%2021heider%20balance%20theory.pdf
 // end::introduction[]
 
 
@@ -16,6 +19,9 @@ This section describes the Balanced Triads algorithm in the Neo4j Graph Algorith
 
 // tag::explanation[]
 
+https://en.wikipedia.org/wiki/Balance_theory
+
+https://en.wikipedia.org/wiki/Signed_graph
 all the text
 
 // end::explanation[]
@@ -25,6 +31,14 @@ all the text
 == Use-cases - when to use the Balance Triads algorithm
 
 // tag::use-case[]
+https://www.maths.ed.ac.uk/~antal/Mypapers/friends05.pdf
+https://www.maths.ed.ac.uk/~antal/Mypapers/friends06.pdf
+https://www.researchgate.net/publication/2146676/download
+https://cs.stanford.edu/~jure/pubs/triads-chi10.pdf
+https://pdfs.semanticscholar.org/7c23/cdd36ea05a09a8de7dcc6c7571537f279439.pdf
+http://mrvar.fdv.uni-lj.si/pajek/SignedNetworks/Bled94.pdf
+https://www.tau.ac.il/~geffene/PDFs/93-Anim_Behav_2013b.pdf
+http://ceur-ws.org/Vol-1710/paper38.pdf
 * one
 * two
 * threee
@@ -44,72 +58,41 @@ image::balanced_triads.png[]
 include::scripts/balanced-triads.cypher[tag=create-sample-graph]
 ----
 
-.The following will return a stream of triples, with `nodeId` for each triangle:
+.The following will count the number of balanced and unbalanced triads that a node is a member of, and return a stream with `nodeId`, `balanced` and 'unbalanced':
 [source, cypher]
 ----
 include::scripts/balanced-triads.cypher[tag=stream-sample-graph]
 ----
 
-// tag::stream-triples-result[]
-.Results
-[opts="header",cols="1,1,1"]
-|===
-| nodeA   | nodeB   | nodeC
-| Will    | Michael | Chris
-| Will    | Mark    | Michael
-| Michael | Karin   | Chris
-|===
-// end::stream-triples-result[]
-
-// tag::stream-graph-explanation[]
-We can see that there are `KNOWS` triangles containing "Will, Michael, and Chris", "Will, Mark, and Michael", and "Michael, Karin, and Chris".
-This means that everybody in the triangle knows each other.
-// end::stream-graph-explanation[]
-
-.The following will count the number of triangles that a node is member of, and write it back. It will return the total triangle count and average clustering coefficient of the given graph:
+.The following will count the number of balanced and unbalanced triads that a node is member of, and write it back. It will return the total balanced triads and unbalanced triads count of the given graph:
 [source, cypher]
 ----
 include::scripts/balanced-triads.cypher[tag=write-sample-graph]
 ----
 
-// tag::write-sample-graph-result[]
+// tag::stream-sample-graph-result[]
 .Results
 [opts="header",cols="1,1,1"]
 |===
-| Name    | Triangles | Coefficient
-| Karin   | 1         | 1
-| Mark    | 1         | 1
-| Chris   | 2         | 0.6666666666666666
-| Will    | 2         | 0.6666666666666666
-| Michael | 3         | 0.3
-| Alice   | 0         | 0
+| nodeId  | balanced | unbalanced
+| Anna    | 3        | 3
+| Matt    | 1        | 1
+| Larry   | 1        | 1
+| Stefan  | 1        | 1
+| Sophia  | 1        | 1
+| Dolores | 1        | 1
 |===
-// end::write-sample-graph-result[]
+// end::stream-sample-graph-result[]
 
-// tag::write-sample-graph-explanation[]
-We learn that Michael is part of the most triangles, but it's Karin and Mark who are the best at introducing their friends - all of the people who know them, know each other!
-// end::write-sample-graph-explanation[]
+
+// tag::stream-sample-graph-explanation[]
+We can see that there are `KNOWS` triangles containing "Will, Michael, and Chris", "Will, Mark, and Michael", and "Michael, Karin, and Chris".
+This means that everybody in the triangle knows each other.
+// end::stream-sample-graph-explanation[]
 
 
 [[algorithms-balanced-triads-example]]
 == Example usage
-
-In graph theory, a https://en.wikipedia.org/wiki/Clustering_coefficient[clustering coefficient] is a measure of the degree to which nodes in a graph tend to cluster together.
-Evidence suggests that in most real-world networks, and in particular social networks, nodes tend to create tightly knit groups characterised by a relatively high density of ties; this likelihood tends to be greater than the average probability of a tie randomly established between two nodes.
-
-We check if this holds true for Yelp's social network of friends:
-
-[source, cypher]
-----
-include::scripts/triangle-count.cypher[tag=triangle-write-yelp]
-----
-
-Average clustering coefficient is 0.0523, which is really low for a social network.
-This indicates that groups of friends are not tightly knit together, but rather sparse.
-We can assume that users are not on Yelp for finding and creating friends, like Facebook for example, but rather something else, like finding good restaurant recommendations.
-
-Local triangle count and clustering coefficient of nodes can be used as features in finding influencers in social networks.
-
 
 [[algorithms-balanced-triads-syntax]]
 == Syntax
@@ -124,20 +107,20 @@ YIELD nodeId, balanced, unbalanced
 .Parameters
 [opts="header",cols="1,1,1,1,4"]
 |===
-| Name         | Type   | Default        | Optional | Description
-| label        | string | null           | yes      | The label to load from the graph. If null, load all nodes
-| relationship | string | null           | yes      | The relationship-type to load from the graph. If null, load all relationships
-| weightProperty | string  | null           | no      | The property name that contains weight. If null, treats the graph as unweighted. Must be numeric.
-| concurrency  | int    | available CPUs | yes      | The number of concurrent threads
+| Name           | Type   | Default        | Optional | Description
+| label          | string | null           | yes      | The label to load from the graph. If null, load all nodes
+| relationship   | string | null           | yes      | The relationship-type to load from the graph. If null, load all relationships
+| weightProperty | string | null           | no       | The property name that contains weight. If null, treats the graph as unweighted. Must be numeric.
+| concurrency    | int    | available CPUs | yes      | The number of concurrent threads
 |===
 
 .Results
 [opts="header",cols="1,1,6"]
 |===
-| Name      | Type | Description
-| nodeId    | int  | The ID of node
-| balanced | int  | The number of triangles a node is member of
-| unbalanced | int  | The number of triangles a node is member of
+| Name       | Type | Description
+| nodeId     | int  | The ID of node
+| balanced   | int  | The number of balanced triads a node is member of
+| unbalanced | int  | The number of unbalanced a node is member of
 |===
 
 .The following will count the number of triangles that a node is a member of, and write it back. It will return the total triangle count and average clustering coefficient of the given graph:
@@ -156,8 +139,8 @@ YIELD loadMillis, computeMillis, writeMillis, nodeCount, balancedTriadCount, unb
 | relationship                  | string  | null           | yes      | The relationship-type to load from the graph. If null, load all relationships
 | concurrency                   | int     | available CPUs | yes      | The number of concurrent threads
 | weightProperty                | string  | null           | no       | The property name that contains weight. If null, treats the graph as unweighted. Must be numeric.
-| balancedProperty | string  | 'balanced'   | yes      | The property name written back to
-| unbalancedProperty | string  | 'unbalanced'   | yes      | The property name written back to
+| balancedProperty              | string  | 'balanced'     | yes      | The property name written back to the count of balanced triads a node is member of
+| unbalancedProperty            | string  | 'unbalanced'   | yes      | The property name written back to the count of unbalanced triads a node is member of
 | write                         | boolean | true           | yes      | Specifies if the result should be written back as a node property
 
 |===
@@ -170,8 +153,8 @@ YIELD loadMillis, computeMillis, writeMillis, nodeCount, balancedTriadCount, unb
 | loadMillis                   | int   | Milliseconds for loading data
 | evalMillis                   | int   | Milliseconds for running the algorithm
 | writeMillis                  | int   | Milliseconds for writing result data back
-| balancedTriadCount           | int   | The number of triangles in the given graph
-| unbalancedTriadCount         | int   | The average clustering coefficient of the given graph
+| balancedTriadCount           | int   | The number of balanced triads in the given graph
+| unbalancedTriadCount         | int   | The number of unbalanced triads in the given graph
 |===
 
 
