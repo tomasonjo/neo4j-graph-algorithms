@@ -7,7 +7,9 @@ This section describes the Balanced Triads algorithm in the Neo4j Graph Algorith
 --
 
 // tag::introduction[]
-<intro text>
+Balanced Triads algorithm 
+
+
 http://www.bertramgawronski.com/documents/G2007EncycBT.pdf
 
 https://www2.bc.edu/arch-woodside/sep%2021heider%20balance%20theory.pdf
@@ -19,10 +21,20 @@ https://www2.bc.edu/arch-woodside/sep%2021heider%20balance%20theory.pdf
 
 // tag::explanation[]
 
-https://en.wikipedia.org/wiki/Balance_theory
+Balanced triads or triangles algorithm is based on https://en.wikipedia.org/wiki/Balance_theory[Balance theory] proposed by psychologist Fritz Heider.
 
+Balance  theory  describes  the  structure  of  people’s opinions  about  other  individuals  and  objects  as  well as  the  perceived  relation  between  them.
+
+The  central notion  of  balance  theory  is  that  certain  structures between individuals and objects are balanced, whereas other  structures  are  imbalanced,  and  that  balanced structures  are  generally  preferred  over  imbalanced structures.
+
+Specifically,  balance  theory  claims  that imbalanced structures are associated with an uncomfortable feeling of negative affect, and that this negative  feeling  leads  people  to  strive  for  balanced structures  and  to  avoid  imbalanced  structures.
+
+In the area of graph theory in mathematics, a signed graph is a graph in which each edge has a positive or negative sign, where positive can be understood as liking vs negative disliking. 
 https://en.wikipedia.org/wiki/Signed_graph
-all the text
+
+Determining if the triad is balanced is simple math:
+
++ + +=+ Balanced - + - =+ Balanced - + + = - Unbalanced 
 
 // end::explanation[]
 
@@ -31,6 +43,7 @@ all the text
 == Use-cases - when to use the Balance Triads algorithm
 
 // tag::use-case[]
+http://acrwebsite.org/volumes/9899/volumes/v08/NA-08
 https://www.maths.ed.ac.uk/~antal/Mypapers/friends05.pdf
 https://www.maths.ed.ac.uk/~antal/Mypapers/friends06.pdf
 https://www.researchgate.net/publication/2146676/download
@@ -84,12 +97,10 @@ include::scripts/balanced-triads.cypher[tag=write-sample-graph]
 |===
 // end::stream-sample-graph-result[]
 
-
 // tag::stream-sample-graph-explanation[]
-We can see that there are `KNOWS` triangles containing "Will, Michael, and Chris", "Will, Mark, and Michael", and "Michael, Karin, and Chris".
-This means that everybody in the triangle knows each other.
+Anna is a member of six triads out of which three are balanced and three are unbalanced.
+All others are a member of one balanced and one unbalanced triad.
 // end::stream-sample-graph-explanation[]
-
 
 [[algorithms-balanced-triads-example]]
 == Example usage
@@ -97,7 +108,7 @@ This means that everybody in the triangle knows each other.
 [[algorithms-balanced-triads-syntax]]
 == Syntax
 
-.The following will count the number of triangles that a node is a member of, and return a stream with `nodeId` and `triangleCount`:
+.The following will count the number of balanced and unbalanced triads that a node is a member of, and return a stream with `nodeId`, `balanced` and 'unbalanced':
 [source, cypher]
 ----
 CALL algo.balancedTriads.stream(label:String, relationship:String, {concurrency:4})
@@ -110,7 +121,7 @@ YIELD nodeId, balanced, unbalanced
 | Name           | Type   | Default        | Optional | Description
 | label          | string | null           | yes      | The label to load from the graph. If null, load all nodes
 | relationship   | string | null           | yes      | The relationship-type to load from the graph. If null, load all relationships
-| weightProperty | string | null           | no       | The property name that contains weight. If null, treats the graph as unweighted. Must be numeric.
+| weightProperty | string | null           | no       | The property name that contains weight. If weight is positive, algorithm treats the relationship as positive. With a negative weight, relationship is treated as negative. Must be numeric.
 | concurrency    | int    | available CPUs | yes      | The number of concurrent threads
 |===
 
@@ -123,7 +134,7 @@ YIELD nodeId, balanced, unbalanced
 | unbalanced | int  | The number of unbalanced a node is member of
 |===
 
-.The following will count the number of triangles that a node is a member of, and write it back. It will return the total triangle count and average clustering coefficient of the given graph:
+.The following will count the number of balanced and unbalanced triads that a node is member of, and write it back. It will return the total balanced triads and unbalanced triads count of the given graph:
 [source, cypher]
 ----
 CALL algo.balancedTriads(label:String, relationship:String,
@@ -138,7 +149,7 @@ YIELD loadMillis, computeMillis, writeMillis, nodeCount, balancedTriadCount, unb
 | label                         | string  | null           | yes      | The label to load from the graph. If null, load all nodes
 | relationship                  | string  | null           | yes      | The relationship-type to load from the graph. If null, load all relationships
 | concurrency                   | int     | available CPUs | yes      | The number of concurrent threads
-| weightProperty                | string  | null           | no       | The property name that contains weight. If null, treats the graph as unweighted. Must be numeric.
+| weightProperty                | string  | null           | no       | The property name that contains weight. If weight is positive, algorithm treats the relationship as positive. With a negative weight, relationship is treated as negative. Must be numeric.
 | balancedProperty              | string  | 'balanced'     | yes      | The property name written back to the count of balanced triads a node is member of
 | unbalancedProperty            | string  | 'unbalanced'   | yes      | The property name written back to the count of unbalanced triads a node is member of
 | write                         | boolean | true           | yes      | Specifies if the result should be written back as a node property
@@ -169,7 +180,7 @@ ifndef::env-docs[]
 == References
 
 // tag::references[]
-* a
+* [1] https://en.wikipedia.org/wiki/Balance_theory
 * b
 * c
 // end::references[]
