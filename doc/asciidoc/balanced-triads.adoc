@@ -43,17 +43,14 @@ Determining if the triad is balanced is simple math:
 == Use-cases - when to use the Balance Triads algorithm
 
 // tag::use-case[]
-http://acrwebsite.org/volumes/9899/volumes/v08/NA-08
 https://www.maths.ed.ac.uk/~antal/Mypapers/friends05.pdf
 https://www.maths.ed.ac.uk/~antal/Mypapers/friends06.pdf
 https://www.researchgate.net/publication/2146676/download
 https://cs.stanford.edu/~jure/pubs/triads-chi10.pdf
 https://pdfs.semanticscholar.org/7c23/cdd36ea05a09a8de7dcc6c7571537f279439.pdf
 http://mrvar.fdv.uni-lj.si/pajek/SignedNetworks/Bled94.pdf
-https://www.tau.ac.il/~geffene/PDFs/93-Anim_Behav_2013b.pdf
-http://ceur-ws.org/Vol-1710/paper38.pdf
-* one
-* two
+* Balanced triads algorithm has been used to analyse structural balance of networks in the animal kingdom. Find this study in https://www.tau.ac.il/~geffene/PDFs/93-Anim_Behav_2013b.pdf[Structural balance in the social networks of a wild mammal].
+* Balanced triads algorithm has been used in the analysis of dynamics in the process of "healing" imbalanced triads and restoring structural balance in a social network. Find more details in https://www.maths.ed.ac.uk/~antal/Mypapers/friends05.pdf[Dynamics of social balance on networks].
 * threee
 // end::use-case[]
 
@@ -71,7 +68,7 @@ image::balanced_triads.png[]
 include::scripts/balanced-triads.cypher[tag=create-sample-graph]
 ----
 
-.The following will count the number of balanced and unbalanced triads that a node is a member of, and return a stream with `nodeId`, `balanced` and 'unbalanced':
+.The following will count the number of balanced and unbalanced triads that a node is a member of, and return a stream with `nodeId`, `balanced` and `unbalanced`:
 [source, cypher]
 ----
 include::scripts/balanced-triads.cypher[tag=stream-sample-graph]
@@ -99,7 +96,7 @@ include::scripts/balanced-triads.cypher[tag=write-sample-graph]
 
 // tag::stream-sample-graph-explanation[]
 Anna is a member of six triads out of which three are balanced and three are unbalanced.
-All others are a member of one balanced and one unbalanced triad.
+All others are each members of one balanced and one unbalanced triad or triangle.
 // end::stream-sample-graph-explanation[]
 
 [[algorithms-balanced-triads-example]]
