@@ -13,6 +13,11 @@ Balanced Triads algorithm
 http://www.bertramgawronski.com/documents/G2007EncycBT.pdf
 
 https://www2.bc.edu/arch-woodside/sep%2021heider%20balance%20theory.pdf
+
+https://www.researchgate.net/publication/2146676/download
+https://cs.stanford.edu/~jure/pubs/triads-chi10.pdf
+https://pdfs.semanticscholar.org/7c23/cdd36ea05a09a8de7dcc6c7571537f279439.pdf
+
 // end::introduction[]
 
 
@@ -43,15 +48,9 @@ Determining if the triad is balanced is simple math:
 == Use-cases - when to use the Balance Triads algorithm
 
 // tag::use-case[]
-https://www.maths.ed.ac.uk/~antal/Mypapers/friends05.pdf
-https://www.maths.ed.ac.uk/~antal/Mypapers/friends06.pdf
-https://www.researchgate.net/publication/2146676/download
-https://cs.stanford.edu/~jure/pubs/triads-chi10.pdf
-https://pdfs.semanticscholar.org/7c23/cdd36ea05a09a8de7dcc6c7571537f279439.pdf
-http://mrvar.fdv.uni-lj.si/pajek/SignedNetworks/Bled94.pdf
 * Balanced triads algorithm has been used to analyse structural balance of networks in the animal kingdom. Find this study in https://www.tau.ac.il/~geffene/PDFs/93-Anim_Behav_2013b.pdf[Structural balance in the social networks of a wild mammal].
-* Balanced triads algorithm has been used in the analysis of dynamics in the process of "healing" imbalanced triads and restoring structural balance in a social network. Find more details in https://www.maths.ed.ac.uk/~antal/Mypapers/friends05.pdf[Dynamics of social balance on networks].
-* threee
+* Balanced triads algorithm has been used to evaluate dynamics in the process of "healing" imbalanced triads and restoring structural balance in a social network. Find more details in https://www.maths.ed.ac.uk/~antal/Mypapers/friends05.pdf[Dynamics of social balance on networks].
+* Balanced triads algorithm and balance theory allow us to better understand consumer to brand relationship and consumer behaviour as shown in the study of https://www2.bc.edu/arch-woodside/sep%2021heider%20balance%20theory.pdf[Updating Heider’s Balance Theory in Consumer Behaviour] by Woodside and Chabet.
 // end::use-case[]
 
 
