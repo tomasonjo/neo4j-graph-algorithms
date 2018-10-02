@@ -60,7 +60,7 @@ public class JaccardProc extends SimilarityProc {
         double similarityCutoff = getSimilarityCutoff(configuration);
         Stream<SimilarityResult> stream = topN(similarityStream(inputs, computer, configuration, similarityCutoff, getTopK(configuration)), getTopN(configuration));
 
-        boolean write = configuration.isWriteFlag(false) && similarityCutoff > 0.0;
+        boolean write = configuration.isWriteFlag(false);
         return writeAndAggregateResults(configuration, stream, inputs.length, write, "SIMILAR");
     }
 
